@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: marketplace-backend-db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: R@m_ryCnZH3pithzvExL
+      POSTGRES_DB: codesumn_db
+      POSTGRES_PORT: '5432'
+    ports:
+      - '5432:5432'
+
