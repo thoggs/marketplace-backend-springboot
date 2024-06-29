@@ -1,10 +1,6 @@
-package codesumn.com.marketplace_backend.models;
+package codesumn.com.marketplace_backend.app.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,6 +19,7 @@ public class UserModel implements Serializable {
     private String lastName;
     private String email;
     private String password;
+    private String role;
 
     public UUID getId() {
         return id;
@@ -62,5 +59,13 @@ public class UserModel implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

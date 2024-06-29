@@ -1,10 +1,6 @@
-package codesumn.com.marketplace_backend.models;
+package codesumn.com.marketplace_backend.app.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,8 +19,9 @@ public class ProductModel implements Serializable {
     private String name;
     private String description;
     private BigDecimal price;
+    private String image;
+    private int stock;
     private String category;
-    private double stock;
 
     public UUID getId() {
         return id;
@@ -58,19 +55,27 @@ public class ProductModel implements Serializable {
         this.price = price;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
     public String getCategory() {
         return category;
     }
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public double getStock() {
-        return stock;
-    }
-
-    public void setStock(double stock) {
-        this.stock = stock;
     }
 }
