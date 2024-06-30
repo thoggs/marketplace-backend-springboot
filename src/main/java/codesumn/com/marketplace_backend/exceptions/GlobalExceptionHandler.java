@@ -1,7 +1,8 @@
 package codesumn.com.marketplace_backend.exceptions;
 
-import codesumn.com.marketplace_backend.dtos.ErrorResponseDto;
-import codesumn.com.marketplace_backend.dtos.MetadataDto;
+import codesumn.com.marketplace_backend.dtos.auth.ErrorResponseDto;
+import codesumn.com.marketplace_backend.dtos.response.ErrorMessageDto;
+import codesumn.com.marketplace_backend.dtos.response.MetadataDto;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,15 +20,19 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto<List<Object>>> handleAllExceptions(Exception ex) {
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "INTERNAL_SERVER_ERROR",
+                "An unexpected error occurred: " + ex.getMessage(),
+                null
+        );
         MetadataDto metadata = new MetadataDto(
-                List.of("An unexpected error occurred: " + ex.getMessage())
+                Collections.singletonList(errorMessage)
         );
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
@@ -37,15 +41,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponseDto<List<Object>>> handleAuthenticationException() {
-        MetadataDto metadata = new MetadataDto(List.of("Invalid credentials"));
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "AUTH_ERROR",
+                "Invalid credentials",
+                null
+        );
+        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponseDto<List<Object>>> handleAccessDeniedException(AccessDeniedException ex) {
-        MetadataDto metadata = new MetadataDto(List.of(new String[]{"Access Denied: " + ex.getMessage()}));
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "ACCESS_DENIED",
+                "Access Denied: " + ex.getMessage(),
+                null
+        );
+        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
@@ -53,7 +68,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDto<List<Object>>> handleIllegalArgumentException(IllegalArgumentException ex) {
-        MetadataDto metadata = new MetadataDto(List.of("Error: " + ex.getMessage()));
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "ILLEGAL_ARGUMENT",
+                "Error: " + ex.getMessage(),
+                null
+        );
+        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
@@ -61,7 +81,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponseDto<List<Object>>> handleEmailAlreadyExistsException() {
-        MetadataDto metadata = new MetadataDto(List.of("Email is already taken"));
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "EMAIL_ALREADY_EXISTS",
+                "Email is already taken",
+                "email"
+        );
+        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
@@ -74,12 +99,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NotNull HttpStatusCode status,
             @NotNull WebRequest request
     ) {
-        List<String> errorMessages = ex
+        List<ErrorMessageDto> errorMessages = ex
                 .getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(FieldError::getDefaultMessage)
-                .collect(Collectors.toList());
+                .map(fieldError -> new ErrorMessageDto(
+                        "VALIDATION_ERROR",
+                        fieldError.getDefaultMessage(),
+                        fieldError.getField()))
+                .toList();
         MetadataDto metadata = new MetadataDto(errorMessages);
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
@@ -93,7 +121,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NotNull HttpStatusCode status,
             @NotNull WebRequest request
     ) {
-        MetadataDto metadata = new MetadataDto(List.of("Failed to read request: " + ex.getMessage()));
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "BAD_REQUEST",
+                "Failed to read request: " + ex.getMessage(),
+                null
+        );
+        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -106,7 +139,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NotNull HttpStatusCode status,
             @NotNull WebRequest request
     ) {
-        MetadataDto metadata = new MetadataDto(List.of("Method Not Allowed: " + ex.getMessage()));
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "METHOD_NOT_ALLOWED",
+                "Method Not Allowed: " + ex.getMessage(),
+                null
+        );
+        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);

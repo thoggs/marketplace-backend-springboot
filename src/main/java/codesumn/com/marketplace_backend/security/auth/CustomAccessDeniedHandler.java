@@ -1,7 +1,8 @@
-package codesumn.com.marketplace_backend.security;
+package codesumn.com.marketplace_backend.security.auth;
 
-import codesumn.com.marketplace_backend.dtos.ErrorResponseDto;
-import codesumn.com.marketplace_backend.dtos.MetadataDto;
+import codesumn.com.marketplace_backend.dtos.auth.ErrorResponseDto;
+import codesumn.com.marketplace_backend.dtos.response.ErrorMessageDto;
+import codesumn.com.marketplace_backend.dtos.response.MetadataDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,9 +32,12 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json");
 
-        MetadataDto metadata = new MetadataDto(
-                List.of("Access Denied: " + accessDeniedException.getMessage())
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "ACCESS_DENIED",
+                "Access Denied: " + accessDeniedException.getMessage(),
+                null
         );
+        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
 
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));

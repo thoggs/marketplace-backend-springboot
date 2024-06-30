@@ -1,4 +1,4 @@
-package codesumn.com.marketplace_backend.services;
+package codesumn.com.marketplace_backend.services.user;
 
 import codesumn.com.marketplace_backend.app.models.UserModel;
 import codesumn.com.marketplace_backend.repository.UserRepository;

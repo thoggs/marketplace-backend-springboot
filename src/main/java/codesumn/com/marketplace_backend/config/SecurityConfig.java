@@ -1,8 +1,8 @@
 package codesumn.com.marketplace_backend.config;
 
 import codesumn.com.marketplace_backend.filters.JwtAuthenticationFilter;
-import codesumn.com.marketplace_backend.security.CustomAccessDeniedHandler;
-import codesumn.com.marketplace_backend.security.CustomAuthenticationEntryPoint;
+import codesumn.com.marketplace_backend.security.auth.CustomAccessDeniedHandler;
+import codesumn.com.marketplace_backend.security.auth.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

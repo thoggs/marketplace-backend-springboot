@@ -1,6 +1,6 @@
 package codesumn.com.marketplace_backend.app.web.controllers;
 
-import codesumn.com.marketplace_backend.dtos.ResponseDto;
+import codesumn.com.marketplace_backend.dtos.response.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
