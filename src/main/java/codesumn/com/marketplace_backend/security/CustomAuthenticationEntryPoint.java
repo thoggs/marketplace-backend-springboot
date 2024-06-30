@@ -31,7 +31,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
 
-        MetadataDto metadata = new MetadataDto(new String[]{"Unauthorized: " + authException.getMessage()});
+        MetadataDto metadata = new MetadataDto(
+                List.of(new String[]{"Unauthorized: " + authException.getMessage()})
+        );
+
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
 

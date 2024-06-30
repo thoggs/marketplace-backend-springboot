@@ -19,17 +19,18 @@ public abstract class ErrorResponseDto<T> implements Serializable {
     public abstract Boolean success();
 
     @JsonProperty("metadata")
-    public abstract List<Object> metadata();
+    public abstract List<MetadataDto> metadata();
 
     @JsonCreator
     public static <T> ErrorResponseDto<T> create(
             @JsonProperty("data") T data,
-            @JsonProperty("metadata") List<Object> metadata
+            @JsonProperty("success") Boolean success,
+            @JsonProperty("metadata") List<MetadataDto> metadata
     ) {
-        return new AutoValue_ErrorResponseDto<>(Optional.ofNullable(data), false, metadata);
+        return new AutoValue_ErrorResponseDto<>(Optional.ofNullable(data), success, metadata);
     }
 
-    public static ErrorResponseDto<List<Object>> createWithoutData(List<Object> metadata) {
+    public static ErrorResponseDto<List<Object>> createWithoutData(List<MetadataDto> metadata) {
         return new AutoValue_ErrorResponseDto<>(Optional.of(Collections.emptyList()), false, metadata);
     }
 }
