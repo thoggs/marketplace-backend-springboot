@@ -1,4 +1,4 @@
-package codesumn.com.marketplace_backend.dtos;
+package codesumn.com.marketplace_backend.dtos.record;
 
 import codesumn.com.marketplace_backend.app.models.UserModel;
 import jakarta.validation.constraints.NotBlank;

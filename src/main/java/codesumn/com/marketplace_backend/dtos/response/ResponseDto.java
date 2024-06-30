@@ -1,4 +1,4 @@
-package codesumn.com.marketplace_backend.dtos;
+package codesumn.com.marketplace_backend.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,16 +19,16 @@ public abstract class ResponseDto<T> implements Serializable {
     public abstract Boolean success();
 
     @JsonProperty("metadata")
-    public abstract List<Object> metadata();
+    public abstract List<MetadataDto> metadata();
 
     @JsonCreator
     public static <T> ResponseDto<T> create(
             @JsonProperty("data") T data,
-            @JsonProperty("metadata") List<Object> metadata
+            @JsonProperty("metadata") List<MetadataDto> metadata
     ) {
         if (metadata == null || metadata.isEmpty()) {
             metadata = Collections.singletonList(
-                    new MetadataDto(List.of(new String[]{"Operation completed successfully."}))
+                    new MetadataDto(List.of(new ErrorMessageDto("INFO", "Operation completed successfully.", null)))
             );
         }
         return new AutoValue_ResponseDto<>(Optional.ofNullable(data), true, metadata);
@@ -40,11 +40,11 @@ public abstract class ResponseDto<T> implements Serializable {
         return create(data, null);
     }
 
-    public static ResponseDto<List<Object>> createWithoutData(List<Object> metadata) {
+    public static ResponseDto<List<Object>> createWithoutData(List<MetadataDto> metadata) {
         if (metadata == null || metadata.isEmpty()) {
             metadata = Collections.singletonList(new MetadataDto(
-                    List.of(new String[]{"Operation completed successfully."}))
-            );
+                    List.of(new ErrorMessageDto("INFO", "Operation completed successfully.", null))
+            ));
         }
         return new AutoValue_ResponseDto<>(Optional.of(Collections.emptyList()), true, metadata);
     }

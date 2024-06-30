@@ -1,5 +1,6 @@
-package codesumn.com.marketplace_backend.dtos;
+package codesumn.com.marketplace_backend.dtos.auth;
 
+import codesumn.com.marketplace_backend.dtos.response.MetadataDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;

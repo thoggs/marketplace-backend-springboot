@@ -1,4 +1,4 @@
-package codesumn.com.marketplace_backend.services;
+package codesumn.com.marketplace_backend.services.jwt;
 
 import codesumn.com.marketplace_backend.config.EnvironConfig;
 import com.auth0.jwt.JWT;

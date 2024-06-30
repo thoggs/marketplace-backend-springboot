@@ -1,5 +1,6 @@
-package codesumn.com.marketplace_backend.dtos;
+package codesumn.com.marketplace_backend.dtos.auth;
 
+import codesumn.com.marketplace_backend.dtos.record.AuthUserRecordDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

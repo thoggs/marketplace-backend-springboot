@@ -1,7 +1,7 @@
 package codesumn.com.marketplace_backend.app.models;
 
-import codesumn.com.marketplace_backend.dtos.AuthUserRecordDto;
-import codesumn.com.marketplace_backend.dtos.UserRecordDto;
+import codesumn.com.marketplace_backend.dtos.record.AuthUserRecordDto;
+import codesumn.com.marketplace_backend.dtos.record.UserRecordDto;
 import jakarta.persistence.*;
 
 import java.io.Serial;
