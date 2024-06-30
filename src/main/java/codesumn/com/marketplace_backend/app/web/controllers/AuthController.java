@@ -1,6 +1,7 @@
 package codesumn.com.marketplace_backend.app.web.controllers;
 
 import codesumn.com.marketplace_backend.app.models.UserModel;
+import codesumn.com.marketplace_backend.dtos.auth.AuthCredentialsRecordDto;
 import codesumn.com.marketplace_backend.dtos.auth.AuthResponseDto;
 import codesumn.com.marketplace_backend.dtos.record.AuthUserRecordDto;
 import codesumn.com.marketplace_backend.dtos.response.ResponseDto;
@@ -46,7 +47,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<ResponseDto<AuthResponseDto>> authenticateUser(
-            @RequestBody @Valid UserRecordDto credentials
+            @RequestBody @Valid AuthCredentialsRecordDto credentials
     ) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(credentials.email(), credentials.password())
