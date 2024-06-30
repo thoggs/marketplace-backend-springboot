@@ -1,59 +1,89 @@
 package codesumn.com.marketplace_backend.app.web.controllers;
 
-import codesumn.com.marketplace_backend.config.EnvironConfig;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import codesumn.com.marketplace_backend.app.models.UserModel;
+import codesumn.com.marketplace_backend.dtos.AuthResponseDto;
+import codesumn.com.marketplace_backend.dtos.AuthUserRecordDto;
+import codesumn.com.marketplace_backend.dtos.ResponseDto;
+import codesumn.com.marketplace_backend.dtos.UserRecordDto;
+import codesumn.com.marketplace_backend.exceptions.EmailAlreadyExistsException;
+import codesumn.com.marketplace_backend.repository.UserRepository;
+import codesumn.com.marketplace_backend.services.JwtService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final String jwtSecret = EnvironConfig.JWT_SECRET;
-    private final long jwtExpirationTime = EnvironConfig.JWT_EXPIRATION_TIME;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager) {
+    public AuthController(
+            AuthenticationManager authenticationManager,
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            JwtService jwtService
+    ) {
         this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> credentials) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(credentials.get("email"), credentials.get("password"))
-            );
+    public ResponseEntity<ResponseDto<AuthResponseDto>> authenticateUser(
+            @RequestBody @Valid UserRecordDto credentials
+    ) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(credentials.email(), credentials.password())
+        );
 
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String token = JWT.create()
-                    .withSubject(userDetails.getUsername())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + jwtExpirationTime))
-                    .sign(Algorithm.HMAC256(jwtSecret));
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserModel user = userRepository.findByEmail(userDetails.getUsername());
+        String token = jwtService.generateToken(userDetails.getUsername());
 
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-            return ResponseEntity.ok(response);
-        } catch (AuthenticationException e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Invalid credentials");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        AuthUserRecordDto userData = new AuthUserRecordDto(user);
+        AuthResponseDto authResponse = new AuthResponseDto(userData, token);
+
+        ResponseDto<AuthResponseDto> response = ResponseDto.create(authResponse);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<ResponseDto<AuthResponseDto>> registerUser(@RequestBody @Valid UserRecordDto user) {
+        if (userRepository.findByEmail(user.email()) != null) {
+            throw new EmailAlreadyExistsException();
         }
+
+        UserModel newUser = new UserModel(user);
+        newUser.setPassword(passwordEncoder.encode(user.password()));
+
+        userRepository.save(newUser);
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.email(), user.password())
+        );
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String token = jwtService.generateToken(userDetails.getUsername());
+
+        AuthUserRecordDto userData = new AuthUserRecordDto(newUser);
+        AuthResponseDto authResponse = new AuthResponseDto(userData, token);
+
+        ResponseDto<AuthResponseDto> response = ResponseDto.create(authResponse);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

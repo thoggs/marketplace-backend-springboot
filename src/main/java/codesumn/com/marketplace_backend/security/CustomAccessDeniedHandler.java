@@ -16,20 +16,28 @@ import java.util.List;
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
+    private final ObjectMapper objectMapper;
+
+    public CustomAccessDeniedHandler(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
     public void handle(
             HttpServletRequest request,
             HttpServletResponse response,
             AccessDeniedException accessDeniedException
-    ) throws IOException, IOException {
+    ) throws IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json");
 
-        MetadataDto metadata = new MetadataDto(new String[]{"Access Denied: " + accessDeniedException.getMessage()});
+        MetadataDto metadata = new MetadataDto(
+                List.of("Access Denied: " + accessDeniedException.getMessage())
+        );
+
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
 
-        ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(errorResponse);
 
         response.getWriter().write(jsonResponse);

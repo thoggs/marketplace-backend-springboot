@@ -4,15 +4,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
-public record MetadataDto(@JsonProperty("messages") String[] messages) implements Serializable {
+public record MetadataDto(List<String> messages) implements Serializable {
 
     @JsonCreator
-    public MetadataDto {
+    public MetadataDto(@JsonProperty("messages") List<String> messages) {
+        this.messages = messages;
     }
 
     @Override
-    public String[] messages() {
+    @JsonProperty("messages")
+    public List<String> messages() {
         return messages;
     }
 }

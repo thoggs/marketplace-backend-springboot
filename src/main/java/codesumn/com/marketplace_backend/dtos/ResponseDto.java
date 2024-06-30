@@ -28,7 +28,7 @@ public abstract class ResponseDto<T> implements Serializable {
     ) {
         if (metadata == null || metadata.isEmpty()) {
             metadata = Collections.singletonList(
-                    new MetadataDto(new String[]{"Operation completed successfully."})
+                    new MetadataDto(List.of(new String[]{"Operation completed successfully."}))
             );
         }
         return new AutoValue_ResponseDto<>(Optional.ofNullable(data), true, metadata);
@@ -43,7 +43,7 @@ public abstract class ResponseDto<T> implements Serializable {
     public static ResponseDto<List<Object>> createWithoutData(List<Object> metadata) {
         if (metadata == null || metadata.isEmpty()) {
             metadata = Collections.singletonList(new MetadataDto(
-                    new String[]{"Operation completed successfully."})
+                    List.of(new String[]{"Operation completed successfully."}))
             );
         }
         return new AutoValue_ResponseDto<>(Optional.of(Collections.emptyList()), true, metadata);
