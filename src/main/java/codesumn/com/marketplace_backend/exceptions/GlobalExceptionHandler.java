@@ -92,6 +92,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto<List<Object>>> handleResourceNotFoundException() {
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "RESOURCE_NOT_FOUND",
+                "User not found in the database",
+                null
+        );
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
+        ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
+                .createWithoutData(Collections.singletonList(metadata));
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
