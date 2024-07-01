@@ -1,6 +1,7 @@
 package codesumn.com.marketplace_backend.app.web.controllers;
 
 import codesumn.com.marketplace_backend.app.models.ProductModel;
+import codesumn.com.marketplace_backend.dtos.query.ProductSpecificationsDto;
 import codesumn.com.marketplace_backend.dtos.record.MetadataPaginationRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.ProductInputRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.ProductRecordDto;
@@ -9,14 +10,21 @@ import codesumn.com.marketplace_backend.dtos.response.PaginationResponseDto;
 import codesumn.com.marketplace_backend.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.exceptions.ResourceNotFoundException;
 import codesumn.com.marketplace_backend.repository.ProductRepository;
+import codesumn.com.marketplace_backend.shared.parsers.SortParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -27,18 +35,32 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductRepository productRepository;
+    private final SortParser sortParser;
 
-    public ProductController(ProductRepository productRepository) {
+    public ProductController(ProductRepository productRepository, ObjectMapper objectMapper) {
         this.productRepository = productRepository;
+        this.sortParser = new SortParser(objectMapper);
     }
 
     @GetMapping
     public ResponseEntity<PaginationResponseDto<List<ProductRecordDto>>> index(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int pageSize
-    ) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-        Page<ProductModel> productPage = productRepository.findAll(pageable);
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) String sorting
+    ) throws IOException {
+        String decodedSorting = (sorting != null) ? URLDecoder.decode(sorting, StandardCharsets.UTF_8) : null;
+
+        Sort sort = sortParser.parseSorting(decodedSorting);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
+
+        Specification<ProductModel> spec = (searchTerm != null && !searchTerm.isEmpty())
+                ? ProductSpecificationsDto.searchWithTerm(searchTerm)
+                : null;
+        Page<ProductModel> productPage = (spec != null)
+                ? productRepository.findAll(spec, pageable)
+                : productRepository.findAll(pageable);
+
         List<ProductRecordDto> productRecords = productPage.getContent().stream()
                 .map(product -> new ProductRecordDto(
                         product.getId(),
@@ -63,8 +85,7 @@ public class ProductController {
                 Collections.emptyList()
         );
 
-        PaginationResponseDto<List<ProductRecordDto>> response = PaginationResponseDto
-                .create(productRecords, metadata);
+        PaginationResponseDto<List<ProductRecordDto>> response = PaginationResponseDto.create(productRecords, metadata);
         return ResponseEntity.ok(response);
     }
 
