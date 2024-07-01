@@ -1,6 +1,6 @@
 package codesumn.com.marketplace_backend.app.models;
 
-import codesumn.com.marketplace_backend.dtos.record.AuthSignupUserRecordDto;
+import codesumn.com.marketplace_backend.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.AuthUserResponseRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.UserRecordDto;
 import jakarta.persistence.*;
@@ -27,7 +27,7 @@ public class UserModel implements Serializable {
     public UserModel() {
     }
 
-    public UserModel(AuthSignupUserRecordDto userRecordDto) {
+    public UserModel(UserInputRecordDto userRecordDto) {
         this.firstName = userRecordDto.firstName();
         this.lastName = userRecordDto.lastName();
         this.email = userRecordDto.email();

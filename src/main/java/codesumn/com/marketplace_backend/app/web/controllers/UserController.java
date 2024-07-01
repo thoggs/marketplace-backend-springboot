@@ -1,7 +1,7 @@
 package codesumn.com.marketplace_backend.app.web.controllers;
 
 import codesumn.com.marketplace_backend.app.models.UserModel;
-import codesumn.com.marketplace_backend.dtos.record.AuthSignupUserRecordDto;
+import codesumn.com.marketplace_backend.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.MetadataPaginationRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.UserRecordDto;
 import codesumn.com.marketplace_backend.dtos.response.PaginationDto;
@@ -90,14 +90,14 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<ResponseDto<UserRecordDto>> store(
-            @RequestBody @Valid AuthSignupUserRecordDto authSignupUserRecordDto
+            @RequestBody @Valid UserInputRecordDto userInputRecordDto
     ) {
-        if (userRepository.findByEmail(authSignupUserRecordDto.email()) != null) {
+        if (userRepository.findByEmail(userInputRecordDto.email()) != null) {
             throw new EmailAlreadyExistsException();
         }
 
-        UserModel newUser = new UserModel(authSignupUserRecordDto);
-        newUser.setPassword(passwordEncoder.encode(authSignupUserRecordDto.password()));
+        UserModel newUser = new UserModel(userInputRecordDto);
+        newUser.setPassword(passwordEncoder.encode(userInputRecordDto.password()));
         userRepository.save(newUser);
 
         UserRecordDto newUserRecord = new UserRecordDto(
@@ -115,23 +115,23 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<UserRecordDto>> update(
             @PathVariable UUID id,
-            @RequestBody @Valid AuthSignupUserRecordDto authSignupUserRecordDto
+            @RequestBody @Valid UserInputRecordDto userInputRecordDto
     ) {
         UserModel existingUser = userRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
 
-        if (userRepository.findByEmail(authSignupUserRecordDto.email()) != null &&
-                !existingUser.getEmail().equals(authSignupUserRecordDto.email())) {
+        if (userRepository.findByEmail(userInputRecordDto.email()) != null &&
+                !existingUser.getEmail().equals(userInputRecordDto.email())) {
             throw new EmailAlreadyExistsException();
         }
 
-        existingUser.setFirstName(authSignupUserRecordDto.firstName());
-        existingUser.setLastName(authSignupUserRecordDto.lastName());
-        existingUser.setEmail(authSignupUserRecordDto.email());
-        existingUser.setRole(authSignupUserRecordDto.role());
+        existingUser.setFirstName(userInputRecordDto.firstName());
+        existingUser.setLastName(userInputRecordDto.lastName());
+        existingUser.setEmail(userInputRecordDto.email());
+        existingUser.setRole(userInputRecordDto.role());
 
-        if (!authSignupUserRecordDto.password().isEmpty()) {
-            existingUser.setPassword(passwordEncoder.encode(authSignupUserRecordDto.password()));
+        if (!userInputRecordDto.password().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(userInputRecordDto.password()));
         }
 
         userRepository.save(existingUser);
