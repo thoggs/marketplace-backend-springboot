@@ -3,9 +3,9 @@ package codesumn.com.marketplace_backend.app.web.controllers;
 import codesumn.com.marketplace_backend.app.models.UserModel;
 import codesumn.com.marketplace_backend.dtos.auth.AuthCredentialsRecordDto;
 import codesumn.com.marketplace_backend.dtos.auth.AuthResponseDto;
-import codesumn.com.marketplace_backend.dtos.record.AuthUserRecordDto;
+import codesumn.com.marketplace_backend.dtos.record.AuthSignupUserRecordDto;
+import codesumn.com.marketplace_backend.dtos.record.AuthUserResponseRecordDto;
 import codesumn.com.marketplace_backend.dtos.response.ResponseDto;
-import codesumn.com.marketplace_backend.dtos.record.UserRecordDto;
 import codesumn.com.marketplace_backend.exceptions.EmailAlreadyExistsException;
 import codesumn.com.marketplace_backend.repository.UserRepository;
 import codesumn.com.marketplace_backend.services.jwt.JwtService;
@@ -18,10 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -57,7 +54,7 @@ public class AuthController {
         UserModel user = userRepository.findByEmail(userDetails.getUsername());
         String token = jwtService.generateToken(userDetails.getUsername());
 
-        AuthUserRecordDto userData = new AuthUserRecordDto(user);
+        AuthUserResponseRecordDto userData = new AuthUserResponseRecordDto(user);
         AuthResponseDto authResponse = new AuthResponseDto(userData, token);
 
         ResponseDto<AuthResponseDto> response = ResponseDto.create(authResponse);
@@ -65,7 +62,9 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ResponseDto<AuthResponseDto>> registerUser(@RequestBody @Valid UserRecordDto user) {
+    public ResponseEntity<ResponseDto<AuthResponseDto>> registerUser(
+            @RequestBody @Valid AuthSignupUserRecordDto user
+    ) {
         if (userRepository.findByEmail(user.email()) != null) {
             throw new EmailAlreadyExistsException();
         }
@@ -81,7 +80,7 @@ public class AuthController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(userDetails.getUsername());
 
-        AuthUserRecordDto userData = new AuthUserRecordDto(newUser);
+        AuthUserResponseRecordDto userData = new AuthUserResponseRecordDto(newUser);
         AuthResponseDto authResponse = new AuthResponseDto(userData, token);
 
         ResponseDto<AuthResponseDto> response = ResponseDto.create(authResponse);

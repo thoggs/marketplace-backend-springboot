@@ -1,11 +1,11 @@
 package codesumn.com.marketplace_backend.dtos.auth;
 
-import codesumn.com.marketplace_backend.dtos.record.AuthUserRecordDto;
+import codesumn.com.marketplace_backend.dtos.record.AuthUserResponseRecordDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record AuthResponseDto(
-        @JsonProperty("user") AuthUserRecordDto user,
+        @JsonProperty("user") AuthUserResponseRecordDto user,
         @JsonProperty("accessToken") String accessToken) {
 
     @JsonCreator

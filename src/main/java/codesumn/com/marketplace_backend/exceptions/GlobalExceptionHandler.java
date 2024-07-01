@@ -2,7 +2,7 @@ package codesumn.com.marketplace_backend.exceptions;
 
 import codesumn.com.marketplace_backend.dtos.auth.ErrorResponseDto;
 import codesumn.com.marketplace_backend.dtos.response.ErrorMessageDto;
-import codesumn.com.marketplace_backend.dtos.response.MetadataDto;
+import codesumn.com.marketplace_backend.dtos.record.MetadataRecordDto;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "An unexpected error occurred: " + ex.getMessage(),
                 null
         );
-        MetadataDto metadata = new MetadataDto(
+        MetadataRecordDto metadata = new MetadataRecordDto(
                 Collections.singletonList(errorMessage)
         );
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
@@ -46,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "Invalid credentials",
                 null
         );
-        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "Access Denied: " + ex.getMessage(),
                 null
         );
-        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "Error: " + ex.getMessage(),
                 null
         );
-        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
@@ -86,10 +86,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "Email is already taken",
                 "email"
         );
-        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto<List<Object>>> handleResourceNotFoundException() {
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "RESOURCE_NOT_FOUND",
+                "User not found in the database",
+                null
+        );
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
+        ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
+                .createWithoutData(Collections.singletonList(metadata));
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @Override
@@ -108,7 +121,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         fieldError.getDefaultMessage(),
                         fieldError.getField()))
                 .toList();
-        MetadataDto metadata = new MetadataDto(errorMessages);
+        MetadataRecordDto metadata = new MetadataRecordDto(errorMessages);
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -126,7 +139,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "Failed to read request: " + ex.getMessage(),
                 null
         );
-        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -144,7 +157,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "Method Not Allowed: " + ex.getMessage(),
                 null
         );
-        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);

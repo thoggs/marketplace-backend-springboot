@@ -2,7 +2,7 @@ package codesumn.com.marketplace_backend.security.auth;
 
 import codesumn.com.marketplace_backend.dtos.auth.ErrorResponseDto;
 import codesumn.com.marketplace_backend.dtos.response.ErrorMessageDto;
-import codesumn.com.marketplace_backend.dtos.response.MetadataDto;
+import codesumn.com.marketplace_backend.dtos.record.MetadataRecordDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,7 +37,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                 "Unauthorized: " + authException.getMessage(),
                 null
         );
-        MetadataDto metadata = new MetadataDto(Collections.singletonList(errorMessage));
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
 
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
