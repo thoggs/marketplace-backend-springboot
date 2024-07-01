@@ -5,14 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
 
-public record AuthUserRecordDto(
+public record AuthUserResponseRecordDto(
         @NotBlank UUID id,
         @NotBlank String firstName,
         @NotBlank String lastName,
         @NotBlank String email,
         @NotBlank String role
 ) {
-    public AuthUserRecordDto(UserModel user) {
+    public AuthUserResponseRecordDto(UserModel user) {
         this(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole());
     }
 }
