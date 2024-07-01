@@ -3,6 +3,8 @@ package codesumn.com.marketplace_backend.app.models;
 import codesumn.com.marketplace_backend.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.AuthUserResponseRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.UserRecordDto;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.core.types.dsl.StringPath;
 import jakarta.persistence.*;
 
 import java.io.Serial;
