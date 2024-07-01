@@ -3,7 +3,7 @@ package codesumn.com.marketplace_backend.app.web.controllers;
 import codesumn.com.marketplace_backend.app.models.UserModel;
 import codesumn.com.marketplace_backend.dtos.auth.AuthCredentialsRecordDto;
 import codesumn.com.marketplace_backend.dtos.auth.AuthResponseDto;
-import codesumn.com.marketplace_backend.dtos.record.AuthSignupUserRecordDto;
+import codesumn.com.marketplace_backend.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.AuthUserResponseRecordDto;
 import codesumn.com.marketplace_backend.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.exceptions.EmailAlreadyExistsException;
@@ -63,7 +63,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto<AuthResponseDto>> registerUser(
-            @RequestBody @Valid AuthSignupUserRecordDto user
+            @RequestBody @Valid UserInputRecordDto user
     ) {
         if (userRepository.findByEmail(user.email()) != null) {
             throw new EmailAlreadyExistsException();
