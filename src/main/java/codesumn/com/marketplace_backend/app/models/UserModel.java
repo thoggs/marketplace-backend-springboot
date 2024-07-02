@@ -1,8 +1,6 @@
 package codesumn.com.marketplace_backend.app.models;
 
 import codesumn.com.marketplace_backend.dtos.record.UserInputRecordDto;
-import codesumn.com.marketplace_backend.dtos.record.AuthUserResponseRecordDto;
-import codesumn.com.marketplace_backend.dtos.record.UserRecordDto;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -35,27 +33,8 @@ public class UserModel implements Serializable {
         this.role = userRecordDto.role();
     }
 
-    public UserModel(AuthUserResponseRecordDto authUserDto) {
-        this.firstName = authUserDto.firstName();
-        this.lastName = authUserDto.lastName();
-        this.email = authUserDto.email();
-        this.role = authUserDto.role();
-    }
-
-    public UserModel(UserRecordDto userRecordDto) {
-        this.id = userRecordDto.id();
-        this.firstName = userRecordDto.firstName();
-        this.lastName = userRecordDto.lastName();
-        this.email = userRecordDto.email();
-        this.role = userRecordDto.role();
-    }
-
     public UUID getId() {
         return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getFirstName() {

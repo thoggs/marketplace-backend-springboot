@@ -59,14 +59,20 @@ public class UserController {
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) String sorting
     ) throws IOException {
-        String decodedSorting = (sorting != null) ? URLDecoder.decode(sorting, StandardCharsets.UTF_8) : null;
+        String decodedSorting = (sorting != null && !sorting.trim().isEmpty() && !"[]".equals(sorting))
+                ? URLDecoder.decode(sorting, StandardCharsets.UTF_8)
+                : null;
 
-        Sort sort = sortParser.parseSorting(decodedSorting);
+        Sort sort = (decodedSorting != null && !decodedSorting.trim().isEmpty() && !"[]".equals(decodedSorting))
+                ? sortParser.parseSorting(decodedSorting)
+                : Sort.by(Sort.Order.asc("firstName"));
+
         Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
 
         Specification<UserModel> spec = (searchTerm != null && !searchTerm.isEmpty())
                 ? UserSpecificationsDto.searchWithTerm(searchTerm)
                 : null;
+
         Page<UserModel> userPage = (spec != null)
                 ? userRepository.findAll(spec, pageable)
                 : userRepository.findAll(pageable);

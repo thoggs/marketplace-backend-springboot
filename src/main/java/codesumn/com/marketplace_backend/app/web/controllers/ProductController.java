@@ -49,14 +49,20 @@ public class ProductController {
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) String sorting
     ) throws IOException {
-        String decodedSorting = (sorting != null) ? URLDecoder.decode(sorting, StandardCharsets.UTF_8) : null;
+        String decodedSorting = (sorting != null && !sorting.trim().isEmpty() && !"[]".equals(sorting))
+                ? URLDecoder.decode(sorting, StandardCharsets.UTF_8)
+                : null;
 
-        Sort sort = sortParser.parseSorting(decodedSorting);
+        Sort sort = (decodedSorting != null && !decodedSorting.trim().isEmpty() && !"[]".equals(decodedSorting))
+                ? sortParser.parseSorting(decodedSorting)
+                : Sort.by(Sort.Order.asc("name"));
+
         Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
 
-        Specification<ProductModel> spec = (searchTerm != null && !searchTerm.isEmpty())
+        Specification<ProductModel> spec = (searchTerm != null && !searchTerm.trim().isEmpty())
                 ? ProductSpecificationsDto.searchWithTerm(searchTerm)
                 : null;
+
         Page<ProductModel> productPage = (spec != null)
                 ? productRepository.findAll(spec, pageable)
                 : productRepository.findAll(pageable);

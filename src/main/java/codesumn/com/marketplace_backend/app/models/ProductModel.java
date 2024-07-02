@@ -1,7 +1,6 @@
 package codesumn.com.marketplace_backend.app.models;
 
 import codesumn.com.marketplace_backend.dtos.record.ProductInputRecordDto;
-import codesumn.com.marketplace_backend.dtos.record.ProductRecordDto;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -28,15 +27,6 @@ public class ProductModel implements Serializable {
     public ProductModel() {
     }
 
-    public ProductModel(ProductRecordDto productRecordDto) {
-        this.name = productRecordDto.name();
-        this.description = productRecordDto.description();
-        this.price = productRecordDto.price();
-        this.image = productRecordDto.image();
-        this.stock = productRecordDto.stock();
-        this.category = productRecordDto.category();
-    }
-
     public ProductModel(ProductInputRecordDto productCreateRecordDto) {
         this.name = productCreateRecordDto.name();
         this.description = productCreateRecordDto.description();
@@ -48,10 +38,6 @@ public class ProductModel implements Serializable {
 
     public UUID getId() {
         return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getName() {
