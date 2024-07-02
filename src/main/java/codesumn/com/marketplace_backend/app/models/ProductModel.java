@@ -16,12 +16,25 @@ public class ProductModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "UUID")
     private UUID id;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
+
+    @Column(name = "image")
     private String image;
+
+    @Column(name = "stock", nullable = false)
     private int stock;
+
+    @Column(name = "category", nullable = false)
     private String category;
 
     public ProductModel() {
