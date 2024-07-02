@@ -3,12 +3,17 @@ package codesumn.com.marketplace_backend.app.web.controllers;
 import codesumn.com.marketplace_backend.app.models.UserModel;
 import codesumn.com.marketplace_backend.dtos.auth.AuthCredentialsRecordDto;
 import codesumn.com.marketplace_backend.dtos.auth.AuthResponseDto;
+import codesumn.com.marketplace_backend.dtos.record.GitHubTokenRequestRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.dtos.record.AuthUserResponseRecordDto;
+import codesumn.com.marketplace_backend.dtos.response.GitHubUserDto;
 import codesumn.com.marketplace_backend.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.exceptions.EmailAlreadyExistsException;
+import codesumn.com.marketplace_backend.exceptions.ResourceNotFoundException;
 import codesumn.com.marketplace_backend.repository.UserRepository;
+import codesumn.com.marketplace_backend.security.auth.CustomUserNotFoundException;
 import codesumn.com.marketplace_backend.services.jwt.JwtService;
+import codesumn.com.marketplace_backend.services.web.GitHubService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,18 +33,21 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final GitHubService gitHubService;
 
     @Autowired
     public AuthController(
             AuthenticationManager authenticationManager,
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            JwtService jwtService
+            JwtService jwtService,
+            GitHubService gitHubService
     ) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.gitHubService = gitHubService;
     }
 
     @PostMapping("/signin")
@@ -51,7 +59,8 @@ public class AuthController {
         );
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        UserModel user = userRepository.findByEmail(userDetails.getUsername());
+        UserModel user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(CustomUserNotFoundException::new);
         String token = jwtService.generateToken(userDetails.getUsername());
 
         AuthUserResponseRecordDto userData = new AuthUserResponseRecordDto(user);
@@ -65,9 +74,7 @@ public class AuthController {
     public ResponseEntity<ResponseDto<AuthResponseDto>> registerUser(
             @RequestBody @Valid UserInputRecordDto user
     ) {
-        if (userRepository.findByEmail(user.email()) != null) {
-            throw new EmailAlreadyExistsException();
-        }
+        userRepository.findByEmail(user.email()).orElseThrow(EmailAlreadyExistsException::new);
 
         UserModel newUser = new UserModel(user);
         newUser.setPassword(passwordEncoder.encode(user.password()));
@@ -77,6 +84,7 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.email(), user.password())
         );
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(userDetails.getUsername());
 
@@ -85,5 +93,23 @@ public class AuthController {
 
         ResponseDto<AuthResponseDto> response = ResponseDto.create(authResponse);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/github-signin")
+    public ResponseEntity<ResponseDto<AuthResponseDto>> authenticateGitHubUser(
+            @RequestBody @Valid GitHubTokenRequestRecordDto tokenRequest
+    ) {
+        GitHubUserDto gitHubUser = gitHubService.getGitHubUser(tokenRequest.githubToken());
+
+        UserModel user = userRepository.findByEmail(gitHubUser.getEmail())
+                .orElseThrow(ResourceNotFoundException::new);
+
+        String token = jwtService.generateToken(user.getEmail());
+
+        AuthUserResponseRecordDto userData = new AuthUserResponseRecordDto(user);
+        AuthResponseDto authResponse = new AuthResponseDto(userData, token);
+
+        ResponseDto<AuthResponseDto> response = ResponseDto.create(authResponse);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -99,12 +100,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponseDto<List<Object>>> handleResourceNotFoundException() {
         ErrorMessageDto errorMessage = new ErrorMessageDto(
                 "RESOURCE_NOT_FOUND",
-                "User not found in the database",
+                "Resource not found in the database",
                 null
         );
         MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
         ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
                 .createWithoutData(Collections.singletonList(metadata));
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto<List<Object>>> handleUsernameNotFoundException(
+            UsernameNotFoundException ex
+    ) {
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "USER_NOT_FOUND",
+                ex.getMessage(),
+                null
+        );
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
+        ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto.createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
