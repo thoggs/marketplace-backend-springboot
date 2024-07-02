@@ -118,9 +118,11 @@ public class UserController {
     public ResponseEntity<ResponseDto<UserRecordDto>> store(
             @RequestBody @Valid UserInputRecordDto userInputRecordDto
     ) {
-        if (userRepository.findByEmail(userInputRecordDto.email()) != null) {
-            throw new EmailAlreadyExistsException();
-        }
+        userRepository
+                .findByEmail(userInputRecordDto.email())
+                .ifPresent(user -> {
+                    throw new EmailAlreadyExistsException();
+                });
 
         UserModel newUser = new UserModel(userInputRecordDto);
         newUser.setPassword(passwordEncoder.encode(userInputRecordDto.password()));
@@ -146,10 +148,13 @@ public class UserController {
         UserModel existingUser = userRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
 
-        if (userRepository.findByEmail(userInputRecordDto.email()) != null &&
-                !existingUser.getEmail().equals(userInputRecordDto.email())) {
-            throw new EmailAlreadyExistsException();
-        }
+        userRepository
+                .findByEmail(userInputRecordDto.email())
+                .ifPresent(user -> {
+                    if (!user.getEmail().equals(existingUser.getEmail())) {
+                        throw new EmailAlreadyExistsException();
+                    }
+                });
 
         existingUser.setFirstName(userInputRecordDto.firstName());
         existingUser.setLastName(userInputRecordDto.lastName());
