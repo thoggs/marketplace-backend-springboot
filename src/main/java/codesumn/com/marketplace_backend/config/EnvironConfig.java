@@ -12,9 +12,19 @@ public class EnvironConfig {
     public static final String GITHUB_API_URL;
 
     static {
-        Dotenv dotenv = Dotenv.load();
-        JWT_SECRET = dotenv.get("JWT_SECRET");
-        JWT_EXPIRATION_TIME = Long.parseLong(Objects.requireNonNull(dotenv.get("JWT_EXPIRATION_TIME")));
-        GITHUB_API_URL = dotenv.get("GITHUB_API_URL");
+        Dotenv dotenv = Dotenv
+                .configure()
+                .ignoreIfMissing()
+                .load();
+
+        JWT_SECRET = System.getenv("JWT_SECRET") != null
+                ? System.getenv("JWT_SECRET")
+                : dotenv.get("JWT_SECRET");
+        JWT_EXPIRATION_TIME = System.getenv("JWT_EXPIRATION_TIME") != null
+                ? Long.parseLong(System.getenv("JWT_EXPIRATION_TIME"))
+                : Long.parseLong(Objects.requireNonNull(dotenv.get("JWT_EXPIRATION_TIME")));
+        GITHUB_API_URL = System.getenv("GITHUB_API_URL") != null
+                ? System.getenv("GITHUB_API_URL")
+                : dotenv.get("GITHUB_API_URL");
     }
 }

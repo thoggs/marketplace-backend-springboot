@@ -10,4 +10,27 @@ services:
       POSTGRES_PORT: '5432'
     ports:
       - '5432:5432'
+    networks:
+      - codesumn-marketplace-backend-network
 
+
+  springboot:
+    container_name: marketplace-backend-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - JWT_SECRET=mysecretkey
+      - JWT_EXPIRATION_TIME=86400000
+      - GITHUB_API_URL=https://api.github.com
+    networks:
+      - codesumn-marketplace-backend-network
+
+networks:
+  codesumn-marketplace-backend-network:
+    driver: bridge
