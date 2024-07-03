@@ -7,6 +7,6 @@ public record UserInputRecordDto(
         @NotBlank String lastName,
         @NotBlank String email,
         @NotBlank String password,
-        @NotBlank String role
+        String role
 ) {
 }
