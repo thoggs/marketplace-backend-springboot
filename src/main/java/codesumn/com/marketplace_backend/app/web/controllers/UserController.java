@@ -11,6 +11,7 @@ import codesumn.com.marketplace_backend.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.exceptions.EmailAlreadyExistsException;
 import codesumn.com.marketplace_backend.exceptions.ResourceNotFoundException;
 import codesumn.com.marketplace_backend.repository.UserRepository;
+import codesumn.com.marketplace_backend.services.user.UserService;
 import codesumn.com.marketplace_backend.shared.parsers.SortParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
@@ -40,16 +41,18 @@ public class UserController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final SortParser sortParser;
+    private final UserService userService;
 
     @Autowired
     public UserController(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper, UserService userService
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.sortParser = new SortParser(objectMapper);
+        this.userService = userService;
     }
 
     @GetMapping
@@ -130,8 +133,10 @@ public class UserController {
                     throw new EmailAlreadyExistsException();
                 });
 
-        UserModel newUser = new UserModel(userInputRecordDto);
+        UserModel newUser = userService.saveUser(userInputRecordDto);
+
         newUser.setPassword(passwordEncoder.encode(userInputRecordDto.password()));
+
         userRepository.save(newUser);
 
         UserRecordDto newUserRecord = new UserRecordDto(

@@ -13,7 +13,6 @@ services:
     networks:
       - codesumn-marketplace-backend-network
 
-
   springboot:
     container_name: marketplace-backend-app
     build:
