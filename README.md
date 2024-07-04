@@ -6,7 +6,7 @@
 
 ## Descrição do Projeto
 
-Este é um projeto de backend utilizando Spring Boot e Java 21. Ele inclui a configuração inicial do
+Este projeto é uma API RESTful utilizando Spring Boot e Java 21. Ele inclui a configuração inicial do
 projeto, modelos básicos e endpoints para manipulação de dados em um banco de dados PostgreSQL.
 
 ## Estrutura do Projeto
