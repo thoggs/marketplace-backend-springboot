@@ -170,6 +170,60 @@ Roles disponíveis: `user`, `admin`, `manager`, `guest`.
 
 - **GET /health/check**: retorna o status da aplicação.
 
+## Estrutura de Resposta
+
+### **Resposta de Sucesso**:
+
+```json
+{
+  "data": [
+    {
+      "id": "7f00f6e0-6ac0-49d8-8b51-26e033a8154c",
+      "name": "Aerodynamic Linen Bench",
+      "description": "Laboriosam accusamus deleniti odit voluptatem iusto.",
+      "category": "Shoes",
+      "price": 391.42,
+      "image": "https://picsum.photos/200/300",
+      "stock": 39
+    }
+  ],
+  "success": true,
+  "metadata": {
+    "pagination": {
+      "currentPage": 1,
+      "itemsPerPage": 10,
+      "totalItems": 101,
+      "totalPages": 11
+    },
+    "messages": [
+      {
+        "errorCode": "INFO",
+        "errorMessage": "Operation completed successfully.",
+        "field": null
+      }
+    ]
+  }
+}
+```
+
+### **Resposta de Erro**:
+
+```json
+{
+  "data": [],
+  "success": false,
+  "metadata": {
+    "messages": [
+      {
+        "errorCode": "RESOURCE_NOT_FOUND",
+        "errorMessage": "Resource not found in the database",
+        "field": null
+      }
+    ]
+  }
+}
+```
+
 ## Configuração para Desenvolvimento
 
 ### Passo 1: Clonar o Repositório
