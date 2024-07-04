@@ -91,7 +91,8 @@ public class ProductController {
                 Collections.emptyList()
         );
 
-        PaginationResponseDto<List<ProductRecordDto>> response = PaginationResponseDto.create(productRecords, metadata);
+        PaginationResponseDto<List<ProductRecordDto>> response = PaginationResponseDto
+                .create(productRecords, metadata);
         return ResponseEntity.ok(response);
     }
 
