@@ -97,7 +97,7 @@ git clone https://github.com/thoggs/marketplace-backend-springboot.git && cd mar
 
 - **POST /auth/signin**: autentica um usuário e retorna dados do usuário e um token de acesso.
 - **POST /auth/signup**: registra um novo usuário e retorna dados do usuário e um token de acesso.
-- **POST /github-signin**: autentica um usuário com o GitHub e retorna dados do usuário e um token de acesso.
+- **POST /auth/github-signin**: autentica um usuário com o GitHub e retorna dados do usuário e um token de acesso.
 
 #### JSON Body Exemplo para `/auth/signup` e `/auth/signin`:
 
