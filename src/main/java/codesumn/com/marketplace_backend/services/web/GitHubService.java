@@ -2,11 +2,14 @@ package codesumn.com.marketplace_backend.services.web;
 
 import codesumn.com.marketplace_backend.config.EnvironConfig;
 import codesumn.com.marketplace_backend.dtos.response.GitHubUserDto;
+import codesumn.com.marketplace_backend.security.auth.CustomUnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,19 +26,26 @@ public class GitHubService {
     }
 
     public GitHubUserDto getGitHubUser(String token) {
-        String url = UriComponentsBuilder.fromHttpUrl(githubApiUrl + "/user")
-                .toUriString();
+        String url = UriComponentsBuilder.fromHttpUrl(githubApiUrl + "/user").toUriString();
 
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        return restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                entity,
-                GitHubUserDto.class
-        ).getBody();
+        try {
+            return restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    GitHubUserDto.class
+            ).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                throw new CustomUnauthorizedException("Invalid GitHub token");
+            } else {
+                throw e;
+            }
+        }
     }
 }
 
