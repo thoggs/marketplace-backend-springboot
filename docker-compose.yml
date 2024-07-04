@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:latest
-    container_name: marketplace-backend-db
+    container_name: marketplace-backend-springboot-db
     restart: always
     environment:
       POSTGRES_USER: admin
@@ -11,10 +11,10 @@ services:
     ports:
       - '5432:5432'
     networks:
-      - codesumn-marketplace-backend-network
+      - marketplace-backend-springboot-network
 
   springboot:
-    container_name: marketplace-backend-app
+    container_name: marketplace-backend-springboot-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -29,8 +29,8 @@ services:
       - GITHUB_API_URL=https://api.github.com
       - SEED_DB=true
     networks:
-      - codesumn-marketplace-backend-network
+      - marketplace-backend-springboot-network
 
 networks:
-  codesumn-marketplace-backend-network:
+  marketplace-backend-springboot-network:
     driver: bridge
