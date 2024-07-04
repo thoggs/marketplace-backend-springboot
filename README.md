@@ -273,11 +273,8 @@ SEE_DB=true
 - **Spring Data JPA**: Abstração para simplificar o acesso a dados com JPA
 - **java-jwt**: Biblioteca para geração e validação de tokens JWT
 - **Spring Boot Starter Test**: Dependência para testes unitários e de integração
-- **Spring Boot DevTools**: Ferramentas de desenvolvimento para Spring Boot
-- **Lombok**: Biblioteca para simplificação de código Java através de anotações
 - **Docker**: Plataforma de contêineres
 - **Gradle**: Ferramenta de automação de build e gerenciamento de dependências
-- **Actuator**: Monitoramento e métricas para aplicações Spring Boot
 
 ## License
 
