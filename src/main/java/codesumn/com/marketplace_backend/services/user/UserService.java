@@ -23,6 +23,7 @@ public class UserService {
         String role = userInputRecordDto.role() != null
                 ? userInputRecordDto.role()
                 : RolesEnum.USER.getValue();
+
         UserModel userModel = new UserModel(userInputRecordDto);
         userModel.setRole(role);
         return userRepository.save(userModel);

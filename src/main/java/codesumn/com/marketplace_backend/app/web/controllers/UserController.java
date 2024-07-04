@@ -134,9 +134,7 @@ public class UserController {
                 });
 
         UserModel newUser = userService.saveUser(userInputRecordDto);
-
         newUser.setPassword(passwordEncoder.encode(userInputRecordDto.password()));
-
         userRepository.save(newUser);
 
         UserRecordDto newUserRecord = new UserRecordDto(

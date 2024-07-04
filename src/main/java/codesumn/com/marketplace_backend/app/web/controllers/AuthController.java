@@ -74,7 +74,9 @@ public class AuthController {
     public ResponseEntity<ResponseDto<AuthResponseDto>> registerUser(
             @RequestBody @Valid UserInputRecordDto user
     ) {
-        userRepository.findByEmail(user.email()).orElseThrow(EmailAlreadyExistsException::new);
+        if (userRepository.findByEmail(user.email()).isPresent()) {
+            throw new EmailAlreadyExistsException();
+        }
 
         UserModel newUser = new UserModel(user);
         newUser.setPassword(passwordEncoder.encode(user.password()));
