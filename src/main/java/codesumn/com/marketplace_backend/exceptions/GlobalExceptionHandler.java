@@ -3,6 +3,7 @@ package codesumn.com.marketplace_backend.exceptions;
 import codesumn.com.marketplace_backend.dtos.auth.ErrorResponseDto;
 import codesumn.com.marketplace_backend.dtos.response.ErrorMessageDto;
 import codesumn.com.marketplace_backend.dtos.record.MetadataRecordDto;
+import codesumn.com.marketplace_backend.security.auth.CustomUnauthorizedException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -54,6 +55,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(CustomUnauthorizedException.class)
+    public ResponseEntity<ErrorResponseDto<List<Object>>> handleUnauthorizedException(
+            CustomUnauthorizedException ex
+    ) {
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "AUTH_ERROR",
+                ex.getMessage(),
+                "githubToken"
+        );
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
+        ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
+                .createWithoutData(Collections.singletonList(metadata));
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponseDto<List<Object>>> handleAccessDeniedException(AccessDeniedException ex) {
