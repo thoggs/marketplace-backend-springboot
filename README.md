@@ -76,7 +76,7 @@ project-root/
 
 Subir o projeto com Docker:
 
-### 1. Clone o repositório e entre na pasta do projeto:
+### 1. Clone o repositório e execute o docker compose:
 
 ```bash
 git clone https://github.com/thoggs/marketplace-backend-springboot.git && cd marketplace-backend-springboot && docker-compose up -d
