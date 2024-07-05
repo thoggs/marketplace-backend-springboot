@@ -2,7 +2,7 @@ package codesumn.com.marketplace_backend.services.web;
 
 import codesumn.com.marketplace_backend.config.EnvironConfig;
 import codesumn.com.marketplace_backend.dtos.response.GitHubUserDto;
-import codesumn.com.marketplace_backend.security.auth.CustomUnauthorizedException;
+import codesumn.com.marketplace_backend.exceptions.errors.CustomUnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

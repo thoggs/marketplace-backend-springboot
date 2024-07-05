@@ -1,4 +1,4 @@
-package codesumn.com.marketplace_backend.security.auth;
+package codesumn.com.marketplace_backend.exceptions.errors;
 
 public class CustomUnauthorizedException extends RuntimeException {
     public CustomUnauthorizedException(String message) {

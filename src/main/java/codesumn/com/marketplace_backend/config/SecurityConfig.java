@@ -1,8 +1,8 @@
 package codesumn.com.marketplace_backend.config;
 
 import codesumn.com.marketplace_backend.filters.JwtAuthenticationFilter;
-import codesumn.com.marketplace_backend.security.auth.CustomAccessDeniedHandler;
-import codesumn.com.marketplace_backend.security.auth.CustomAuthenticationEntryPoint;
+import codesumn.com.marketplace_backend.exceptions.handlers.CustomAccessDeniedHandler;
+import codesumn.com.marketplace_backend.exceptions.handlers.CustomAuthenticationHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,12 +22,12 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final CustomAccessDeniedHandler accessDeniedHandler;
-    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAuthenticationHandler authenticationEntryPoint;
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthFilter,
             CustomAccessDeniedHandler accessDeniedHandler,
-            CustomAuthenticationEntryPoint authenticationEntryPoint
+            CustomAuthenticationHandler authenticationEntryPoint
     ) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.accessDeniedHandler = accessDeniedHandler;
