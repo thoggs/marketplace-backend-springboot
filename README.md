@@ -124,6 +124,14 @@ Roles disponíveis: `user`, `admin`, `manager`, `guest`.
 }
 ```
 
+- **POST /auth/github-signin**:
+
+```json
+{
+  "githubToken": "YOUR_GITHUB_TOKEN"
+}
+```
+
 ### **Users** (Usuários)
 
 - **GET /api/users**: retorna uma lista paginada de todos os usuarios registrados. É possível personalizar a
