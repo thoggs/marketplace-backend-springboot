@@ -36,9 +36,8 @@ project-root/
 │   ├── record/
 │   └── response/
 ├── exceptions/
-│   ├── EmailAlreadyExistsException.java
-│   ├── GlobalExceptionHandler.java
-│   └── ResourceNotFoundException.java
+│   ├── errors/
+│   └── handlers/
 ├── filters/
 │   └── JwtAuthenticationFilter.java
 ├── repository/
