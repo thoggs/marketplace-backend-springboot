@@ -1,6 +1,8 @@
 package codesumn.com.marketplace_backend.app.models;
 
 import codesumn.com.marketplace_backend.dtos.record.UserInputRecordDto;
+import codesumn.com.marketplace_backend.exceptions.errors.EnumValidationException;
+import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -30,8 +32,9 @@ public class UserModel implements Serializable {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private String role;
+    private RolesEnum role;
 
     public UserModel() {
     }
@@ -41,7 +44,7 @@ public class UserModel implements Serializable {
         this.lastName = userRecordDto.lastName();
         this.email = userRecordDto.email();
         this.password = userRecordDto.password();
-        this.role = userRecordDto.role();
+        setRole(userRecordDto.role());
     }
 
     public UUID getId() {
@@ -80,11 +83,15 @@ public class UserModel implements Serializable {
         this.password = password;
     }
 
-    public String getRole() {
+    public RolesEnum getRole() {
         return role;
     }
 
     public void setRole(String role) {
-        this.role = role;
+        try {
+            this.role = RolesEnum.valueOf(role.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new EnumValidationException(RolesEnum.class.getSimpleName(), role);
+        }
     }
 }

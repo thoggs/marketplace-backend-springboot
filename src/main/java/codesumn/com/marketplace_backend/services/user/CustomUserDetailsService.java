@@ -3,6 +3,8 @@ package codesumn.com.marketplace_backend.services.user;
 import codesumn.com.marketplace_backend.app.models.UserModel;
 import codesumn.com.marketplace_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,10 +28,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         UserModel user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
+
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                Collections.singletonList(user::getRole)
+                Collections.singletonList(authority)
         );
     }
 }

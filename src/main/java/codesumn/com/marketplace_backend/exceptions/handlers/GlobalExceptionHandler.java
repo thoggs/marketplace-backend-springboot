@@ -1,9 +1,12 @@
-package codesumn.com.marketplace_backend.exceptions;
+package codesumn.com.marketplace_backend.exceptions.handlers;
 
 import codesumn.com.marketplace_backend.dtos.auth.ErrorResponseDto;
 import codesumn.com.marketplace_backend.dtos.response.ErrorMessageDto;
 import codesumn.com.marketplace_backend.dtos.record.MetadataRecordDto;
-import codesumn.com.marketplace_backend.security.auth.CustomUnauthorizedException;
+import codesumn.com.marketplace_backend.exceptions.errors.EmailAlreadyExistsException;
+import codesumn.com.marketplace_backend.exceptions.errors.EnumValidationException;
+import codesumn.com.marketplace_backend.exceptions.errors.ResourceNotFoundException;
+import codesumn.com.marketplace_backend.exceptions.errors.CustomUnauthorizedException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -83,6 +86,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(EnumValidationException.class)
+    public ResponseEntity<ErrorResponseDto<List<Object>>> handleEnumValidationException(
+            EnumValidationException ex
+    ) {
+        ErrorMessageDto errorMessage = new ErrorMessageDto(
+                "ENUM_VALIDATION_ERROR",
+                String.format("Invalid value '%s' for enum %s", ex.getInvalidValue(), ex.getEnumName()),
+                "role"
+        );
+        MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
+        ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
+                .createWithoutData(Collections.singletonList(metadata));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDto<List<Object>>> handleIllegalArgumentException(
             IllegalArgumentException ex
@@ -134,7 +152,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 null
         );
         MetadataRecordDto metadata = new MetadataRecordDto(Collections.singletonList(errorMessage));
-        ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto.createWithoutData(Collections.singletonList(metadata));
+        ErrorResponseDto<List<Object>> errorResponse = ErrorResponseDto
+                .createWithoutData(Collections.singletonList(metadata));
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 

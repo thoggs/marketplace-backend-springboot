@@ -8,7 +8,7 @@ import codesumn.com.marketplace_backend.dtos.record.ProductRecordDto;
 import codesumn.com.marketplace_backend.dtos.response.PaginationDto;
 import codesumn.com.marketplace_backend.dtos.response.PaginationResponseDto;
 import codesumn.com.marketplace_backend.dtos.response.ResponseDto;
-import codesumn.com.marketplace_backend.exceptions.ResourceNotFoundException;
+import codesumn.com.marketplace_backend.exceptions.errors.ResourceNotFoundException;
 import codesumn.com.marketplace_backend.repository.ProductRepository;
 import codesumn.com.marketplace_backend.shared.parsers.SortParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
