@@ -3,30 +3,30 @@ package codesumn.com.marketplace_backend.dtos.response;
 import codesumn.com.marketplace_backend.dtos.record.MetadataRecordDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.auto.value.AutoValue;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-@AutoValue
-public abstract class ResponseDto<T> implements Serializable {
-
-    @JsonProperty("data")
-    public abstract Optional<T> data();
-
-    @JsonProperty("success")
-    public abstract Boolean success();
-
-    @JsonProperty("metadata")
-    public abstract List<MetadataRecordDto> metadata();
+public record ResponseDto<T>(
+        T data,
+        Boolean success,
+        List<MetadataRecordDto> metadata
+) implements Serializable {
 
     @JsonCreator
+    public ResponseDto(
+            @JsonProperty("data") T data,
+            @JsonProperty("success") Boolean success,
+            @JsonProperty("metadata") List<MetadataRecordDto> metadata) {
+        this.data = data;
+        this.success = success;
+        this.metadata = metadata;
+    }
+
     public static <T> ResponseDto<T> create(
             @JsonProperty("data") T data,
-            @JsonProperty("metadata") List<MetadataRecordDto> metadata
-    ) {
+            @JsonProperty("metadata") List<MetadataRecordDto> metadata) {
         if (metadata == null || metadata.isEmpty()) {
             metadata = Collections.singletonList(
                     new MetadataRecordDto(
@@ -34,12 +34,10 @@ public abstract class ResponseDto<T> implements Serializable {
                     )
             );
         }
-        return new AutoValue_ResponseDto<>(Optional.ofNullable(data), true, metadata);
+        return new ResponseDto<>(data, true, metadata);
     }
 
-    public static <T> ResponseDto<T> create(
-            @JsonProperty("data") T data
-    ) {
+    public static <T> ResponseDto<T> create(@JsonProperty("data") T data) {
         return create(data, null);
     }
 
@@ -49,10 +47,19 @@ public abstract class ResponseDto<T> implements Serializable {
                     List.of(new ErrorMessageDto("INFO", "Operation completed successfully.", null))
             ));
         }
-        return new AutoValue_ResponseDto<>(Optional.of(Collections.emptyList()), true, metadata);
+        return new ResponseDto<>(Collections.emptyList(), true, metadata);
     }
 
     public static ResponseDto<List<Object>> createWithoutData() {
         return createWithoutData(null);
+    }
+
+    @Override
+    public String toString() {
+        return "ResponseDto{" +
+                "data=" + data +
+                ", success=" + success +
+                ", metadata=" + metadata +
+                '}';
     }
 }
