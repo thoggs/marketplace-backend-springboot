@@ -19,7 +19,6 @@ repositories {
     maven { url = uri("https://jitpack.io") }
 }
 
-extra["autoValueVersion"] = "1.11.0"
 extra["javaJwtVersion"] = "4.4.0"
 extra["javaDotenvVersion"] = "5.2.2"
 extra["datafakerVersion"] = "2.3.0"
@@ -33,8 +32,6 @@ dependencies {
     implementation("com.auth0:java-jwt:${property("javaJwtVersion")}")
     implementation("io.github.cdimascio:java-dotenv:${property("javaDotenvVersion")}")
     implementation("net.datafaker:datafaker:${property("datafakerVersion")}")
-    compileOnly("com.google.auto.value:auto-value-annotations:${property("autoValueVersion")}")
-    annotationProcessor("com.google.auto.value:auto-value:${property("autoValueVersion")}")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
