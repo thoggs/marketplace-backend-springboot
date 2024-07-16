@@ -6,8 +6,9 @@
 
 ## Descrição do Projeto
 
-Este projeto é uma API RESTful utilizando Spring Boot e Java 21. Ele inclui a configuração inicial do
-projeto, modelos básicos e endpoints para manipulação de dados em um banco de dados PostgreSQL.
+Este projeto é uma API RESTful utilizando Spring Boot e Java 21. Ele inclui a configuração inicial do projeto, modelos
+básicos e endpoints para manipulação de dados em um banco de dados PostgreSQL. Para acessar o frontend
+correspondente, [clique aqui](https://github.com/thoggs/virtual-mall-frontend-nextjs).
 
 ## Estrutura do Projeto
 
