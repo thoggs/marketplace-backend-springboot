@@ -1,8 +1,8 @@
 package codesumn.com.marketplace_backend.services.user;
 
-import codesumn.com.marketplace_backend.app.models.UserModel;
-import codesumn.com.marketplace_backend.dtos.record.UserInputRecordDto;
-import codesumn.com.marketplace_backend.repository.UserRepository;
+import codesumn.com.marketplace_backend.domain.models.UserModel;
+import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
+import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
 import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

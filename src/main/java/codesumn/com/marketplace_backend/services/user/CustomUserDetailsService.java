@@ -1,7 +1,7 @@
 package codesumn.com.marketplace_backend.services.user;
 
-import codesumn.com.marketplace_backend.app.models.UserModel;
-import codesumn.com.marketplace_backend.repository.UserRepository;
+import codesumn.com.marketplace_backend.domain.models.UserModel;
+import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

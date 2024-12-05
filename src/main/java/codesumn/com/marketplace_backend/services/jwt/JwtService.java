@@ -1,6 +1,6 @@
 package codesumn.com.marketplace_backend.services.jwt;
 
-import codesumn.com.marketplace_backend.config.EnvironConfig;
+import codesumn.com.marketplace_backend.application.config.EnvironConfig;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.stereotype.Service;
