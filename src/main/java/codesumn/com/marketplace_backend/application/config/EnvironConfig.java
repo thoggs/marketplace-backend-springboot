@@ -11,6 +11,8 @@ public class EnvironConfig {
     public static final long JWT_EXPIRATION_TIME;
     public static final String GITHUB_API_URL;
     public static final String SEED_DB;
+    public static final String GITHUB_USER_PATH;
+    public static final String GITHUB_SCHEME;
 
     static {
         Dotenv dotenv = Dotenv
@@ -29,6 +31,14 @@ public class EnvironConfig {
         GITHUB_API_URL = System.getenv("GITHUB_API_URL") != null
                 ? System.getenv("GITHUB_API_URL")
                 : dotenv.get("GITHUB_API_URL");
+
+        GITHUB_USER_PATH = System.getenv("GITHUB_USER_PATH") != null
+                ? System.getenv("GITHUB_USER_PATH")
+                : dotenv.get("GITHUB_USER_PATH");
+
+        GITHUB_SCHEME = System.getenv("GITHUB_SCHEME") != null
+                ? System.getenv("GITHUB_SCHEME")
+                : dotenv.get("GITHUB_SCHEME");
 
         SEED_DB = System.getenv("SEED_DB") != null
                 ? System.getenv("SEED_DB")
