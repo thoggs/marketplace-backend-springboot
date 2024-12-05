@@ -4,11 +4,13 @@ import codesumn.com.marketplace_backend.application.dtos.params.SortingParamDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class SortParser {
     private final ObjectMapper objectMapper;
 
