@@ -1,3 +1,4 @@
+
 # Marketplace
 
 <p align="center" width="100%">
@@ -14,54 +15,33 @@ correspondente, [clique aqui](https://github.com/thoggs/virtual-mall-frontend-ne
 
 ```
 project-root/
-├── app/
-│   ├── models/
-│   │   ├── ProductModel.java
-│   │   └── UserModel.java
-│   ├── web/
-│   │   └── controllers/
-│   │       ├── AuthController.java
-│   │       ├── HealthController.java
-│   │       ├── ProductController.java
-│   │       └── UserController.java
+├── application/
 │   ├── config/
-│   │   ├── AppConfig.java
-│   │   ├── CorsConfig.java
-│   │   ├── EnvironConfig.java
-│   │   ├── RestTemplateConfig.java
-│   │   └── SecurityConfig.java
-├── dtos/
-│   ├── auth/
-│   ├── params/
-│   ├── query/
-│   ├── record/
-│   └── response/
-├── exceptions/
-│   ├── errors/
-│   └── handlers/
-├── filters/
-│   └── JwtAuthenticationFilter.java
-├── repository/
-│   ├── ProductRepository.java
-│   └── UserRepository.java
-├── security/
-│   └── auth/
-│       ├── CustomAccessDeniedHandler.java
-│       ├── CustomAuthenticationEntryPoint.java
-│       └── CustomUserNotFoundException.java
+│   ├── controllers/
+│   ├── dtos/
+│   ├── filters/
+├── domain/
+│   ├── input/
+│   ├── models/
+│   ├── output/
+│   └── seeders/
+├── infrastructure/
+│   ├── adapters.persistence.repository/
+│   └── configuration/
 ├── services/
 │   ├── jwt/
 │   ├── user/
 │   └── web/
 ├── shared/
 │   ├── enums/
+│   ├── exceptions/
 │   └── parsers/
-├── MarketplaceBackendApplication.java
+├── db.migration/
+│   └── V1__create_tables.sql
 ├── application.properties
 ├── application-docker.properties
 ├── application-local.properties
 └── application-production.properties
-└── ...
 ```
 
 ## Pré-requisitos
@@ -253,8 +233,10 @@ Crie ou edite o arquivo `.env` na raiz do projeto e adicione suas configuraçõe
 ```env
 JWT_SECRET=mysecretkey
 JWT_EXPIRATION_TIME=86400000
-GITHUB_API_URL=https://api.github.com
-SEE_DB=true
+GITHUB_API_URL=api.github.com
+GITHUB_USER_PATH=/user
+GITHUB_SCHEME=https
+SEED_DB=true
 ```
 
 ### Passo 5: Rodar o Projeto

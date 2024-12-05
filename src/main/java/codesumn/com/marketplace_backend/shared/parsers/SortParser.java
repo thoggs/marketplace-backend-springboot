@@ -1,6 +1,6 @@
 package codesumn.com.marketplace_backend.shared.parsers;
 
-import codesumn.com.marketplace_backend.dtos.params.SortingParamDto;
+import codesumn.com.marketplace_backend.application.dtos.params.SortingParamDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Sort;
