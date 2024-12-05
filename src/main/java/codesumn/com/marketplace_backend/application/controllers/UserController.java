@@ -1,5 +1,6 @@
 package codesumn.com.marketplace_backend.application.controllers;
 
+import codesumn.com.marketplace_backend.application.dtos.params.UserFilterCriteriaParamDTO;
 import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserRecordDto;
@@ -9,6 +10,7 @@ import codesumn.com.marketplace_backend.domain.usecases.UserService;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.EmailAlreadyExistsException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.ResourceNotFoundException;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,16 +33,13 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<PaginationResponseDto<List<UserRecordDto>>> index(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int pageSize,
-            @RequestParam(required = false) String searchTerm,
-            @RequestParam(required = false) String sorting
+            @Valid @ParameterObject @ModelAttribute UserFilterCriteriaParamDTO parameters
     ) throws IOException {
         return new ResponseEntity<>(userService.getUsers(
-                page,
-                pageSize,
-                searchTerm,
-                sorting
+                parameters.getPage(),
+                parameters.getPageSize(),
+                parameters.getSearchTerm(),
+                parameters.getSortField()
         ), HttpStatus.OK);
     }
 

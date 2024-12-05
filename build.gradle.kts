@@ -2,6 +2,7 @@ extra["javaJwtVersion"] = "4.4.0"
 extra["javaDotenvVersion"] = "5.2.2"
 extra["datafakerVersion"] = "2.4.2"
 extra["flywayCoreVersion"] = "11.0.1"
+extra["springdocVersion"] = "2.7.0"
 
 plugins {
     java
@@ -34,6 +35,7 @@ dependencies {
     implementation("net.datafaker:datafaker:${property("datafakerVersion")}")
     implementation("org.flywaydb:flyway-core:${property("flywayCoreVersion")}")
     implementation("org.flywaydb:flyway-database-postgresql:${property("flywayCoreVersion")}")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${property("springdocVersion")}")
 
     runtimeOnly("org.postgresql:postgresql")
 

@@ -1,6 +1,6 @@
 package codesumn.com.marketplace_backend.shared.parsers;
 
-import codesumn.com.marketplace_backend.application.dtos.params.SortingParamDto;
+import codesumn.com.marketplace_backend.application.dtos.params.SortingParamDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Sort;
@@ -23,7 +23,7 @@ public class SortParser {
             return Sort.unsorted();
         }
 
-        List<SortingParamDto> sortingParams = objectMapper.readValue(sorting, new TypeReference<>() {
+        List<SortingParamDTO> sortingParams = objectMapper.readValue(sorting, new TypeReference<>() {
         });
         List<Sort.Order> orders = sortingParams
                 .stream()

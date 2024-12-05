@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class SortingParamDto {
+public class SortingParamDTO {
     private String id;
     private boolean desc;
 
