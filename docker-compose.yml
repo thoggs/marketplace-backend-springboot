@@ -11,7 +11,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - ./postgres:/home/postgres_db
+      - postgres-storage:/var/lib/postgresql/data
     networks:
       - marketplace-backend-network
 
@@ -35,6 +35,10 @@ services:
       - SEED_DB=true
     networks:
       - marketplace-backend-network
+
+volumes:
+  postgres-storage:
+    driver: local
 
 networks:
   marketplace-backend-network:
