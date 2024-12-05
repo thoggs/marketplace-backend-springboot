@@ -1,7 +1,15 @@
 package codesumn.com.marketplace_backend.application.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class GitHubUserDto {
 
     @JsonProperty("login")
@@ -99,84 +107,4 @@ public class GitHubUserDto {
 
     @JsonProperty("updated_at")
     private String updatedAt;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getHireable() {
-        return hireable;
-    }
-
-    public void setHireable(String hireable) {
-        this.hireable = hireable;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public String getTwitterUsername() {
-        return twitterUsername;
-    }
-
-    public void setTwitterUsername(String twitterUsername) {
-        this.twitterUsername = twitterUsername;
-    }
-
-    public Integer getPublicRepos() {
-        return publicRepos;
-    }
-
-    public void setPublicRepos(Integer publicRepos) {
-        this.publicRepos = publicRepos;
-    }
-
-    public Integer getPublicGists() {
-        return publicGists;
-    }
-
-    public void setPublicGists(Integer publicGists) {
-        this.publicGists = publicGists;
-    }
-
-    public Integer getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(Integer followers) {
-        this.followers = followers;
-    }
-
-    public Integer getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(Integer following) {
-        this.following = following;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }

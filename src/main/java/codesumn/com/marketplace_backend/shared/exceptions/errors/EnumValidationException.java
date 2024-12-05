@@ -1,5 +1,8 @@
 package codesumn.com.marketplace_backend.shared.exceptions.errors;
 
+import lombok.Getter;
+
+@Getter
 public class EnumValidationException extends RuntimeException {
     private final String enumName;
     private final String invalidValue;
@@ -10,11 +13,4 @@ public class EnumValidationException extends RuntimeException {
         this.invalidValue = invalidValue;
     }
 
-    public String getEnumName() {
-        return enumName;
-    }
-
-    public String getInvalidValue() {
-        return invalidValue;
-    }
 }

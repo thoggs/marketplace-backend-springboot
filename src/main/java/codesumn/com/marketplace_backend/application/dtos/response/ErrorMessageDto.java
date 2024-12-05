@@ -2,7 +2,9 @@ package codesumn.com.marketplace_backend.application.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 public class ErrorMessageDto {
     @JsonProperty("errorCode")
     private String errorCode;
@@ -30,15 +32,4 @@ public class ErrorMessageDto {
         this.field = field;
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public String getField() {
-        return field;
-    }
 }
