@@ -1,14 +1,11 @@
 package codesumn.com.marketplace_backend.application.controllers;
 
 import codesumn.com.marketplace_backend.application.dtos.params.UserFilterCriteriaParamDTO;
-import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.response.PaginationResponseDto;
 import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.domain.usecases.UserService;
-import codesumn.com.marketplace_backend.shared.exceptions.errors.EmailAlreadyExistsException;
-import codesumn.com.marketplace_backend.shared.exceptions.errors.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
