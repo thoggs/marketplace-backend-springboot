@@ -1,12 +1,10 @@
 package codesumn.com.marketplace_backend.domain.usecases;
 
-import codesumn.com.marketplace_backend.application.dtos.query.UserSpecificationsDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.response.PaginationResponseDto;
 import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
