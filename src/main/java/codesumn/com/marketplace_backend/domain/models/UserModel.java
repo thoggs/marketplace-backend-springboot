@@ -1,6 +1,5 @@
 package codesumn.com.marketplace_backend.domain.models;
 
-import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,8 +41,4 @@ public class UserModel implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private RolesEnum role;
-
-    public UserModel(UserInputRecordDto userRecordDto) {
-        this.role = RolesEnum.fromValue(userRecordDto.role());
-    }
 }

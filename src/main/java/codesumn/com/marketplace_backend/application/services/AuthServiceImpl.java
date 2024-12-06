@@ -7,12 +7,12 @@ import codesumn.com.marketplace_backend.application.dtos.record.GitHubTokenReque
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.response.GitHubUserDto;
 import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
+import codesumn.com.marketplace_backend.application.mappers.UserMapper;
 import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.domain.usecases.UserRegistrationService;
 import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
 import codesumn.com.marketplace_backend.services.jwt.JwtService;
 import codesumn.com.marketplace_backend.services.web.GitHubService;
-import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.CustomUserNotFoundException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.EmailAlreadyExistsException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.ResourceNotFoundException;
@@ -83,9 +83,8 @@ public class AuthServiceImpl implements UserRegistrationService {
             throw new EmailAlreadyExistsException();
         }
 
-        UserModel newUser = new UserModel(userInput);
-        newUser.setPassword(passwordEncoder.encode(userInput.password()));
-        newUser.setRole(userInput.role() == null ? RolesEnum.USER : RolesEnum.fromValue(userInput.role()));
+        UserModel newUser = UserMapper.fromDto(userInput, passwordEncoder);
+
         userRepository.save(newUser);
 
         Authentication authentication = authenticationManager.authenticate(
