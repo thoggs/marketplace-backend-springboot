@@ -23,7 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserRegistrationServiceImpl implements UserRegistrationService {
+public class AuthServiceImpl implements UserRegistrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -31,7 +31,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     private final AuthenticationManager authenticationManager;
     private final GitHubService gitHubService;
 
-    public UserRegistrationServiceImpl(
+    public AuthServiceImpl(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
