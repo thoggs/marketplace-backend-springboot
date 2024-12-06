@@ -10,6 +10,7 @@ import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.domain.usecases.UserService;
 import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
+import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.EmailAlreadyExistsException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.ResourceNotFoundException;
 import codesumn.com.marketplace_backend.shared.parsers.SortParser;
@@ -157,7 +158,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setFirstName(userInput.firstName());
         existingUser.setLastName(userInput.lastName());
         existingUser.setEmail(userInput.email());
-        existingUser.setRole(userInput.role());
+        existingUser.setRole(RolesEnum.fromValue(userInput.role()));
 
         if (!userInput.password().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(userInput.password()));

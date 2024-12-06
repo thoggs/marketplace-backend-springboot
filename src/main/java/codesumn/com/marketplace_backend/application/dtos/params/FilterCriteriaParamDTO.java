@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserFilterCriteriaParamDTO {
+public class FilterCriteriaParamDTO {
 
     private String searchTerm;
     private String role;

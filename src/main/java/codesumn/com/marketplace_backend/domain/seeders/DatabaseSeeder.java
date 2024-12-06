@@ -5,6 +5,7 @@ import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.application.config.EnvironConfig;
 import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.ProductRepository;
 import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
+import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import net.datafaker.Faker;
 import net.datafaker.providers.base.Text;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,7 @@ public class DatabaseSeeder {
                                 .build()
                         )
                 ));
-                user.setRole(faker.options().option("USER", "ADMIN"));
+                user.setRole(RolesEnum.fromValue(faker.options().option("USER", "ADMIN")));
                 userRepository.save(user);
             }
             logger.info("100 Users Seeded");

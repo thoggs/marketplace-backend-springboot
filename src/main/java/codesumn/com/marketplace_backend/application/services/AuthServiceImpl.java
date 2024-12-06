@@ -7,6 +7,7 @@ import codesumn.com.marketplace_backend.application.dtos.record.GitHubTokenReque
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.response.GitHubUserDto;
 import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
+import codesumn.com.marketplace_backend.application.mappers.UserMapper;
 import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.domain.usecases.UserRegistrationService;
 import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
@@ -23,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserRegistrationServiceImpl implements UserRegistrationService {
+public class AuthServiceImpl implements UserRegistrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -31,7 +32,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     private final AuthenticationManager authenticationManager;
     private final GitHubService gitHubService;
 
-    public UserRegistrationServiceImpl(
+    public AuthServiceImpl(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
@@ -82,8 +83,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             throw new EmailAlreadyExistsException();
         }
 
-        UserModel newUser = new UserModel(userInput);
-        newUser.setPassword(passwordEncoder.encode(userInput.password()));
+        UserModel newUser = UserMapper.fromDto(userInput, passwordEncoder);
+
         userRepository.save(newUser);
 
         Authentication authentication = authenticationManager.authenticate(
