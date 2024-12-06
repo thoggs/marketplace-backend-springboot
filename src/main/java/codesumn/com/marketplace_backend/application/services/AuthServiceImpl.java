@@ -12,6 +12,7 @@ import codesumn.com.marketplace_backend.domain.usecases.UserRegistrationService;
 import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
 import codesumn.com.marketplace_backend.services.jwt.JwtService;
 import codesumn.com.marketplace_backend.services.web.GitHubService;
+import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.CustomUserNotFoundException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.EmailAlreadyExistsException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.ResourceNotFoundException;
@@ -84,6 +85,7 @@ public class AuthServiceImpl implements UserRegistrationService {
 
         UserModel newUser = new UserModel(userInput);
         newUser.setPassword(passwordEncoder.encode(userInput.password()));
+        newUser.setRole(userInput.role() == null ? RolesEnum.USER : RolesEnum.fromValue(userInput.role()));
         userRepository.save(newUser);
 
         Authentication authentication = authenticationManager.authenticate(

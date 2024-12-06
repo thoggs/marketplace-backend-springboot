@@ -18,9 +18,8 @@ public class UserCreationService {
     }
 
     public UserModel saveUser(UserInputRecordDto userInput) {
-        String role = userInput.role() != null ? userInput.role() : RolesEnum.USER.getValue();
         UserModel userModel = new UserModel(userInput);
-        userModel.setRole(role);
+        userModel.setRole(RolesEnum.fromValue(userInput.role()));
         return userRepository.save(userModel);
     }
 }
