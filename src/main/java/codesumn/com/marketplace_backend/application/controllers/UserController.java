@@ -1,6 +1,6 @@
 package codesumn.com.marketplace_backend.application.controllers;
 
-import codesumn.com.marketplace_backend.application.dtos.params.UserFilterCriteriaParamDTO;
+import codesumn.com.marketplace_backend.application.dtos.params.FilterCriteriaParamDTO;
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.response.PaginationResponseDto;
@@ -30,7 +30,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<PaginationResponseDto<List<UserRecordDto>>> index(
-            @Valid @ParameterObject @ModelAttribute UserFilterCriteriaParamDTO parameters
+            @Valid @ParameterObject @ModelAttribute FilterCriteriaParamDTO parameters
     ) throws IOException {
         return new ResponseEntity<>(userService.getUsers(
                 parameters.getPage(),
