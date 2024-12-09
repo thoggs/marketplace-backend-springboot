@@ -1,21 +1,21 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: portainer-pv
+  name: marketplace-db-pv
 spec:
   capacity:
     storage: 5Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/data/portainer
+    path: /mnt/data/marketplace-db
     type: DirectoryOrCreate
 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: portainer-pvc
+  name: marketplace-db-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -44,7 +44,7 @@ spec:
         - mountPath: /usr/share/i18n
           name: locales-volume
   containers:
-    - name: postgres-db
+    - name: marketplace-postgres
       image: postgres:17-alpine
       ports:
         - containerPort: 5432
@@ -60,7 +60,7 @@ spec:
           value: "5432"
       volumeMounts:
         - mountPath: /var/lib/postgresql/data
-          name: postgres-storage
+          name: marketplace-postgres-storage
       resources:
         requests:
           memory: "512Mi"
@@ -69,9 +69,9 @@ spec:
           memory: "1Gi"
           cpu: "500m"
   volumes:
-    - name: postgres-storage
+    - name: marketplace-postgres-storage
       persistentVolumeClaim:
-        claimName: portainer-pvc
+        claimName: marketplace-db-pvc
     - name: locales-volume
       emptyDir: { }
   restartPolicy: Always
