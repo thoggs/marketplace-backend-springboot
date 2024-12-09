@@ -33,7 +33,7 @@ metadata:
 spec:
   initContainers:
     - name: install-locales
-      image: alpine:3.18
+      image: alpine:latest
       command:
         - sh
         - -c
