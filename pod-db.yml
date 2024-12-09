@@ -1,4 +1,3 @@
----
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -28,9 +27,9 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: marketplace-backend-pod
+  name: marketplace-db-pod
   labels:
-    app: marketplace-backend
+    app: marketplace-db
 spec:
   initContainers:
     - name: install-locales
@@ -69,48 +68,10 @@ spec:
         limits:
           memory: "1Gi"
           cpu: "500m"
-
-    - name: app
-      image: localhost/marketplace-backend-springboot:latest
-      ports:
-        - containerPort: 8080
-          hostPort: 8080
-      env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: 'production'
-        - name: JWT_SECRET
-          value: 'mysecretkey'
-        - name: JWT_EXPIRATION_TIME
-          value: '86400000'
-        - name: GITHUB_API_URL
-          value: 'api.github.com'
-        - name: GITHUB_USER_PATH
-          value: '/user'
-        - name: GITHUB_SCHEME
-          value: 'https'
-        - name: SEED_DB
-          value: 'true'
-      resources:
-        requests:
-          memory: "1Gi"
-          cpu: "500m"
-        limits:
-          memory: "2Gi"
-          cpu: "1"
-
   volumes:
     - name: postgres-storage
       persistentVolumeClaim:
-        claimName: postgres-pvc
-    - name: portainer-storage
-      persistentVolumeClaim:
         claimName: portainer-pvc
-    - name: podman-sock
-      hostPath:
-        path: /run/podman/podman.sock
-        type: Socket
     - name: locales-volume
       emptyDir: { }
   restartPolicy: Always
-
-#  podman build --rm --layers=false -t marketplace-backend-springboot:latest . &&  podman play kube pod.yml
