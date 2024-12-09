@@ -5,6 +5,9 @@
     <img width="22%" src="https://www.vectorlogo.zone/logos/springio/springio-ar21.svg" alt="Spring Boot Logo">
 </p>
 
+docker network create --driver overlay --attachable marketplace-network
+
+
 ## Descrição do Projeto
 
 Este projeto é uma API RESTful utilizando Spring Boot e Java 21. Ele inclui a configuração inicial do projeto, modelos

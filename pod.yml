@@ -1,0 +1,116 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: portainer-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data/portainer
+    type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: portainer-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: marketplace-backend-pod
+  labels:
+    app: marketplace-backend
+spec:
+  initContainers:
+    - name: install-locales
+      image: alpine:3.18
+      command:
+        - sh
+        - -c
+        - >
+          apk add --no-cache musl-locales musl-locales-lang &&
+          cp -r /usr/share/i18n /i18n;
+      volumeMounts:
+        - mountPath: /usr/share/i18n
+          name: locales-volume
+  containers:
+    - name: postgres-db
+      image: postgres:17-alpine
+      ports:
+        - containerPort: 5432
+          hostPort: 5432
+      env:
+        - name: POSTGRES_USER
+          value: 'admin'
+        - name: POSTGRES_PASSWORD
+          value: 'R@m_ryCnZH3pithzvExL'
+        - name: POSTGRES_DB
+          value: 'codesumn_db'
+        - name: POSTGRES_PORT
+          value: "5432"
+      volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-storage
+      resources:
+        requests:
+          memory: "512Mi"
+          cpu: "200m"
+        limits:
+          memory: "1Gi"
+          cpu: "500m"
+
+    - name: app
+      image: localhost/marketplace-backend-springboot:latest
+      ports:
+        - containerPort: 8080
+          hostPort: 8080
+      env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: 'production'
+        - name: JWT_SECRET
+          value: 'mysecretkey'
+        - name: JWT_EXPIRATION_TIME
+          value: '86400000'
+        - name: GITHUB_API_URL
+          value: 'api.github.com'
+        - name: GITHUB_USER_PATH
+          value: '/user'
+        - name: GITHUB_SCHEME
+          value: 'https'
+        - name: SEED_DB
+          value: 'true'
+      resources:
+        requests:
+          memory: "1Gi"
+          cpu: "500m"
+        limits:
+          memory: "2Gi"
+          cpu: "1"
+
+  volumes:
+    - name: postgres-storage
+      persistentVolumeClaim:
+        claimName: postgres-pvc
+    - name: portainer-storage
+      persistentVolumeClaim:
+        claimName: portainer-pvc
+    - name: podman-sock
+      hostPath:
+        path: /run/podman/podman.sock
+        type: Socket
+    - name: locales-volume
+      emptyDir: { }
+  restartPolicy: Always
+
+#  podman build --rm --layers=false -t marketplace-backend-springboot:latest . &&  podman play kube pod.yml

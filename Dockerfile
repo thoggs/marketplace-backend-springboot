@@ -1,4 +1,4 @@
-FROM oraclelinux:8 as builder
+FROM oraclelinux:9 as builder
 
 RUN set -eux; \
     dnf install -y tar git wget unzip
@@ -32,7 +32,7 @@ COPY . .
 
 RUN gradle clean build -x test
 
-FROM oraclelinux:8
+FROM oraclelinux:9
 
 ENV LANG en_US.UTF-8
 ARG JAVA_VERSION=21
@@ -40,7 +40,6 @@ ENV JAVA_HOME=/usr/java/jdk-$JAVA_VERSION
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 COPY --from=builder $JAVA_HOME $JAVA_HOME
-
 COPY --from=builder /app/build/libs/*.jar /app/app.jar
 
 RUN set -eux; \
@@ -57,5 +56,4 @@ RUN set -eux; \
     done
 
 EXPOSE 8080
-
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

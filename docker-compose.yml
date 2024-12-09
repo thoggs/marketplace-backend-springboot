@@ -28,11 +28,13 @@ services:
     depends_on:
       - db
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - JWT_SECRET=mysecretkey
-      - JWT_EXPIRATION_TIME=86400000
-      - GITHUB_API_URL=https://api.github.com
-      - SEED_DB=true
+      SPRING_PROFILES_ACTIVE: docker
+      JWT_SECRET: mysecretkey
+      JWT_EXPIRATION_TIME: 86400000
+      GITHUB_API_URL: api.github.com
+      GITHUB_USER_PATH: /user
+      GITHUB_SCHEME: https
+      SEED_DB: true
     networks:
       - marketplace-network
 
@@ -42,4 +44,4 @@ volumes:
 
 networks:
   marketplace-network:
-    external: true
+    driver: bridge
