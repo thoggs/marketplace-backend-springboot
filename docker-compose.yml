@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:17
-    container_name: marketplace-backend-db
+    container_name: marketplace-backend-springboot-db
     restart: always
     env_file:
       - .env
@@ -13,7 +13,7 @@ services:
       - marketplace-network
 
   springboot:
-    container_name: marketplace-backend-app
+    container_name: marketplace-backend-springboot-app
     build:
       context: .
       dockerfile: Dockerfile
