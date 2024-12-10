@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: marketplace-backend-pod
+  name: marketplace-backend-springboot-pod
   labels:
-    app: marketplace-backend
+    app: marketplace-backend-springboot
 spec:
   containers:
     - name: app
@@ -13,7 +13,7 @@ spec:
           hostPort: 8080
       env:
         - name: POSTGRES_URL
-          value: 'jdbc:postgresql://marketplace-db-pod:5432/codesumn_db'
+          value: 'jdbc:postgresql://marketplace-backend-springboot-db-pod:5432/codesumn_db'
         - name: POSTGRES_USER
           value: 'admin'
         - name: POSTGRES_PASSWORD
