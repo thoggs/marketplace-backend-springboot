@@ -63,11 +63,11 @@ spec:
           name: marketplace-backend-springboot-postgres-storage
       resources:
         requests:
-          memory: "512Mi"
-          cpu: "200m"
-        limits:
           memory: "1Gi"
           cpu: "500m"
+        limits:
+          memory: "2Gi"
+          cpu: "2"
   volumes:
     - name: marketplace-backend-springboot-postgres-storage
       persistentVolumeClaim:
