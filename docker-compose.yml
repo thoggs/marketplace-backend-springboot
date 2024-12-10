@@ -35,4 +35,4 @@ volumes:
 
 networks:
   marketplace-network:
-    driver: bridge
+    external: true
