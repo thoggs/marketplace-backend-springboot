@@ -13,6 +13,7 @@ import codesumn.com.marketplace_backend.domain.usecases.UserRegistrationService;
 import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
 import codesumn.com.marketplace_backend.services.jwt.JwtService;
 import codesumn.com.marketplace_backend.services.web.GitHubService;
+import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.CustomUserNotFoundException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.EmailAlreadyExistsException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.ResourceNotFoundException;
@@ -66,8 +67,19 @@ public class AuthServiceImpl implements UserRegistrationService {
     public ResponseDto<AuthResponseDto> authenticateGitHubUser(GitHubTokenRequestRecordDto tokenRequest) {
         GitHubUserDto gitHubUser = gitHubService.getGitHubUser(tokenRequest.githubToken());
 
-        UserModel user = userRepository.findByEmail(gitHubUser.getEmail())
-                .orElseThrow(ResourceNotFoundException::new);
+        UserModel user = new UserModel();
+
+        if (userRepository.existsByEmail(gitHubUser.getEmail())) {
+            user = userRepository.findByEmail(gitHubUser.getEmail()).orElseThrow(ResourceNotFoundException::new);
+        } else {
+            user.setFirstName(gitHubUser.getName());
+            user.setLastName("");
+            user.setEmail(gitHubUser.getEmail());
+            user.setPassword(passwordEncoder.encode(tokenRequest.githubToken()));
+            user.setRole(RolesEnum.USER);
+
+            userRepository.save(user);
+        }
 
         String token = jwtService.generateToken(user.getEmail());
 
