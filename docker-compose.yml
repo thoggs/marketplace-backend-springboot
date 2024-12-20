@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile
       args:
         JAVA_VERSION: 21
-        GRADLE_VERSION: 8.8
+        GRADLE_VERSION: 8.11
     ports:
       - '8080:8080'
     depends_on:

@@ -7,12 +7,12 @@ import codesumn.com.marketplace_backend.shared.exceptions.errors.EmailAlreadyExi
 import codesumn.com.marketplace_backend.shared.exceptions.errors.EnumValidationException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.ResourceNotFoundException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.CustomUnauthorizedException;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -175,9 +175,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
-            @NotNull HttpHeaders headers,
-            @NotNull HttpStatusCode status,
-            @NotNull WebRequest request
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode status,
+            @NonNull WebRequest request
     ) {
         List<ErrorMessageDto> errorMessages = ex
                 .getBindingResult()
@@ -197,9 +197,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(
             HttpMessageNotReadableException ex,
-            @NotNull HttpHeaders headers,
-            @NotNull HttpStatusCode status,
-            @NotNull WebRequest request
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode status,
+            @NonNull WebRequest request
     ) {
         ErrorMessageDto errorMessage = new ErrorMessageDto(
                 "BAD_REQUEST",
@@ -215,9 +215,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
             HttpRequestMethodNotSupportedException ex,
-            @NotNull HttpHeaders headers,
-            @NotNull HttpStatusCode status,
-            @NotNull WebRequest request
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode status,
+            @NonNull WebRequest request
     ) {
         ErrorMessageDto errorMessage = new ErrorMessageDto(
                 "METHOD_NOT_ALLOWED",
