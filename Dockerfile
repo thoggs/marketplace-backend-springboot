@@ -4,7 +4,7 @@ RUN set -eux; \
     dnf install -y tar git wget unzip
 
 ARG JAVA_VERSION=21
-ARG GRADLE_VERSION=8.8
+ARG GRADLE_VERSION=8.11
 
 ENV JAVA_URL=https://download.oracle.com/java/$JAVA_VERSION/latest \
     JAVA_HOME=/usr/java/jdk-$JAVA_VERSION
