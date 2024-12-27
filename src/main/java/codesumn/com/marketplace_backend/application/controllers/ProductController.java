@@ -1,7 +1,7 @@
 package codesumn.com.marketplace_backend.application.controllers;
 
 import codesumn.com.marketplace_backend.domain.models.ProductModel;
-import codesumn.com.marketplace_backend.application.dtos.query.ProductSpecificationsDto;
+import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.specifications.ProductSpecifications;
 import codesumn.com.marketplace_backend.application.dtos.record.MetadataPaginationRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.ProductInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.ProductRecordDto;
@@ -60,7 +60,7 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
 
         Specification<ProductModel> spec = (searchTerm != null && !searchTerm.trim().isEmpty())
-                ? ProductSpecificationsDto.searchWithTerm(searchTerm)
+                ? ProductSpecifications.searchWithTerm(searchTerm)
                 : null;
 
         Page<ProductModel> productPage = (spec != null)

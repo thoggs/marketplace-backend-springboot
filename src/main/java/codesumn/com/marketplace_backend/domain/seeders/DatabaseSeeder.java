@@ -4,7 +4,7 @@ import codesumn.com.marketplace_backend.domain.models.ProductModel;
 import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.application.config.EnvironConfig;
 import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.ProductRepository;
-import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
+import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.user.UserJpaRepository;
 import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import net.datafaker.Faker;
 import net.datafaker.providers.base.Text;
@@ -29,7 +29,7 @@ public class DatabaseSeeder {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseSeeder.class);
     private final JdbcTemplate jdbcTemplate;
-    private final UserRepository userRepository;
+    private final UserJpaRepository userJpaRepository;
     private final ProductRepository productRepository;
     private final Faker faker;
     private final Boolean enableSeeder;
@@ -37,11 +37,11 @@ public class DatabaseSeeder {
     @Autowired
     public DatabaseSeeder(
             JdbcTemplate jdbcTemplate,
-            UserRepository userRepository,
+            UserJpaRepository userJpaRepository,
             ProductRepository productRepository
     ) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userRepository = userRepository;
+        this.userJpaRepository = userJpaRepository;
         this.productRepository = productRepository;
         this.faker = new Faker();
         this.enableSeeder = Boolean.valueOf(EnvironConfig.SEED_DB);
@@ -75,7 +75,7 @@ public class DatabaseSeeder {
                         )
                 ));
                 user.setRole(RolesEnum.fromValue(faker.options().option("USER", "ADMIN")));
-                userRepository.save(user);
+                userJpaRepository.save(user);
             }
             logger.info("100 Users Seeded");
         } else {

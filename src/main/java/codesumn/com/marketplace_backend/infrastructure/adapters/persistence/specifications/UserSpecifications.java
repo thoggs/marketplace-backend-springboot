@@ -1,9 +1,9 @@
-package codesumn.com.marketplace_backend.application.dtos.query;
+package codesumn.com.marketplace_backend.infrastructure.adapters.persistence.specifications;
 
 import codesumn.com.marketplace_backend.domain.models.UserModel;
 import org.springframework.data.jpa.domain.Specification;
 
-public class UserSpecificationsDto {
+public class UserSpecifications {
 
     public static Specification<UserModel> searchWithTerm(String searchTerm) {
         return (root, query, criteriaBuilder) -> {

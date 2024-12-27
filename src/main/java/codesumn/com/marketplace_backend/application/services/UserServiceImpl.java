@@ -1,6 +1,6 @@
 package codesumn.com.marketplace_backend.application.services;
 
-import codesumn.com.marketplace_backend.application.dtos.query.UserSpecificationsDto;
+import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.specifications.UserSpecifications;
 import codesumn.com.marketplace_backend.application.dtos.record.MetadataPaginationRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserRecordDto;
@@ -8,8 +8,8 @@ import codesumn.com.marketplace_backend.application.dtos.response.PaginationDto;
 import codesumn.com.marketplace_backend.application.dtos.response.PaginationResponseDto;
 import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.domain.models.UserModel;
+import codesumn.com.marketplace_backend.domain.output.UserPersistencePort;
 import codesumn.com.marketplace_backend.domain.usecases.UserService;
-import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
 import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.EmailAlreadyExistsException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.ResourceNotFoundException;
@@ -17,6 +17,7 @@ import codesumn.com.marketplace_backend.shared.parsers.SortParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
+    private final UserPersistencePort userPersistencePort;
     private final PasswordEncoder passwordEncoder;
     private final SortParser sortParser;
     private final UserCreationService userCreationService;
@@ -40,12 +41,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(
-            UserRepository userRepository,
+            UserPersistencePort userPersistencePort,
             PasswordEncoder passwordEncoder,
             SortParser sortParser,
             UserCreationService userCreationService
     ) {
-        this.userRepository = userRepository;
+        this.userPersistencePort = userPersistencePort;
         this.passwordEncoder = passwordEncoder;
         this.sortParser = sortParser;
         this.userCreationService = userCreationService;
@@ -66,15 +67,15 @@ public class UserServiceImpl implements UserService {
                 ? sortParser.parseSorting(decodedSorting)
                 : Sort.by(Sort.Order.asc("firstName"));
 
-        org.springframework.data.domain.Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
 
         Specification<UserModel> spec = (searchTerm != null && !searchTerm.isEmpty())
-                ? UserSpecificationsDto.searchWithTerm(searchTerm)
+                ? UserSpecifications.searchWithTerm(searchTerm)
                 : null;
 
         Page<UserModel> userPage = (spec != null)
-                ? userRepository.findAll(spec, pageable)
-                : userRepository.findAll(pageable);
+                ? userPersistencePort.findAllWithSpecAndPageable(spec, pageable)
+                : userPersistencePort.findAllWithPageable(pageable);
 
         List<UserRecordDto> userRecords = userPage.getContent().stream()
                 .map(user -> new UserRecordDto(
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDto<UserRecordDto> getUserById(UUID id) {
-        UserModel user = userRepository.findById(id)
+        UserModel user = userPersistencePort.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
 
         UserRecordDto userRecord = new UserRecordDto(
@@ -119,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDto<UserRecordDto> createUser(UserInputRecordDto userInput) {
-        userRepository
+        userPersistencePort
                 .findByEmail(userInput.email())
                 .ifPresent(user -> {
                     throw new EmailAlreadyExistsException();
@@ -129,7 +130,7 @@ public class UserServiceImpl implements UserService {
 
         newUser.setPassword(passwordEncoder.encode(userInput.password()));
 
-        userRepository.save(newUser);
+        userPersistencePort.saveUser(newUser);
 
         UserRecordDto newUserRecord = new UserRecordDto(
                 newUser.getId(),
@@ -144,10 +145,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDto<UserRecordDto> updateUser(UUID id, UserInputRecordDto userInput) {
-        UserModel existingUser = userRepository.findById(id)
+        UserModel existingUser = userPersistencePort.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
 
-        userRepository
+        userPersistencePort
                 .findByEmail(userInput.email())
                 .ifPresent(user -> {
                     if (!user.getEmail().equals(existingUser.getEmail())) {
@@ -164,7 +165,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setPassword(passwordEncoder.encode(userInput.password()));
         }
 
-        userRepository.save(existingUser);
+        userPersistencePort.saveUser(existingUser);
 
         UserRecordDto updatedUserRecord = new UserRecordDto(
                 existingUser.getId(),
@@ -179,10 +180,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDto<UserRecordDto> deleteUser(UUID id) {
-        UserModel user = userRepository.findById(id)
+        UserModel user = userPersistencePort.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
 
-        userRepository.delete(user);
+        userPersistencePort.deleteUser(user);
 
         UserRecordDto userRecord = new UserRecordDto(
                 user.getId(),
