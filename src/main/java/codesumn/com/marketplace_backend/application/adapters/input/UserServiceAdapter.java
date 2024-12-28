@@ -54,7 +54,7 @@ public class UserServiceAdapter implements UserServicePort {
     }
 
     @Override
-    public PaginationResponseDto<List<UserRecordDto>> getUsers(
+    public PaginationResponseDto<List<UserRecordDto>> getAll(
             int page,
             int pageSize,
             String searchTerm,
