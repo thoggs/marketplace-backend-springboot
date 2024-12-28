@@ -25,7 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthPortAdapter implements UserRegistrationPort {
+public class AuthServiceAdapter implements UserRegistrationPort {
 
     private final UserPersistencePort userPersistencePort;
     private final PasswordEncoder passwordEncoder;
@@ -33,7 +33,7 @@ public class AuthPortAdapter implements UserRegistrationPort {
     private final AuthenticationManager authenticationManager;
     private final GitHubService gitHubService;
 
-    public AuthPortAdapter(
+    public AuthServiceAdapter(
             UserPersistencePort userPersistencePort,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
