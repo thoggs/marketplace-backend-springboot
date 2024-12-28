@@ -1,4 +1,4 @@
-package codesumn.com.marketplace_backend.application.services;
+package codesumn.com.marketplace_backend.application.adapters.input;
 
 import codesumn.com.marketplace_backend.application.dtos.auth.AuthCredentialsRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.auth.AuthResponseDto;
@@ -9,8 +9,8 @@ import codesumn.com.marketplace_backend.application.dtos.response.GitHubUserDto;
 import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.application.mappers.UserMapper;
 import codesumn.com.marketplace_backend.domain.models.UserModel;
-import codesumn.com.marketplace_backend.domain.usecases.UserRegistrationService;
-import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
+import codesumn.com.marketplace_backend.domain.output.UserPersistencePort;
+import codesumn.com.marketplace_backend.domain.input.UserRegistrationPort;
 import codesumn.com.marketplace_backend.services.jwt.JwtService;
 import codesumn.com.marketplace_backend.services.web.GitHubService;
 import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
@@ -25,21 +25,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthServiceImpl implements UserRegistrationService {
+public class AuthPortAdapter implements UserRegistrationPort {
 
-    private final UserRepository userRepository;
+    private final UserPersistencePort userPersistencePort;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final GitHubService gitHubService;
 
-    public AuthServiceImpl(
-            UserRepository userRepository,
+    public AuthPortAdapter(
+            UserPersistencePort userPersistencePort,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
             AuthenticationManager authenticationManager, GitHubService gitHubService
     ) {
-        this.userRepository = userRepository;
+        this.userPersistencePort = userPersistencePort;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -53,7 +53,7 @@ public class AuthServiceImpl implements UserRegistrationService {
         );
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        UserModel user = userRepository.findByEmail(userDetails.getUsername())
+        UserModel user = userPersistencePort.findByEmail(userDetails.getUsername())
                 .orElseThrow(CustomUserNotFoundException::new);
         String token = jwtService.generateToken(userDetails.getUsername());
 
@@ -69,8 +69,8 @@ public class AuthServiceImpl implements UserRegistrationService {
 
         UserModel user = new UserModel();
 
-        if (userRepository.existsByEmail(gitHubUser.getEmail())) {
-            user = userRepository.findByEmail(gitHubUser.getEmail()).orElseThrow(ResourceNotFoundException::new);
+        if (userPersistencePort.existsByEmail(gitHubUser.getEmail())) {
+            user = userPersistencePort.findByEmail(gitHubUser.getEmail()).orElseThrow(ResourceNotFoundException::new);
         } else {
             user.setFirstName(gitHubUser.getName());
             user.setLastName("");
@@ -78,7 +78,7 @@ public class AuthServiceImpl implements UserRegistrationService {
             user.setPassword(passwordEncoder.encode(tokenRequest.githubToken()));
             user.setRole(RolesEnum.USER);
 
-            userRepository.save(user);
+            userPersistencePort.saveUser(user);
         }
 
         String token = jwtService.generateToken(user.getEmail());
@@ -91,13 +91,13 @@ public class AuthServiceImpl implements UserRegistrationService {
 
     @Override
     public ResponseDto<AuthResponseDto> registerUser(UserInputRecordDto userInput) {
-        if (userRepository.findByEmail(userInput.email()).isPresent()) {
+        if (userPersistencePort.findByEmail(userInput.email()).isPresent()) {
             throw new EmailAlreadyExistsException();
         }
 
         UserModel newUser = UserMapper.fromDto(userInput, passwordEncoder);
 
-        userRepository.save(newUser);
+        userPersistencePort.saveUser(newUser);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userInput.email(), userInput.password())

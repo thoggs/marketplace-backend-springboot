@@ -1,4 +1,4 @@
-package codesumn.com.marketplace_backend.domain.usecases;
+package codesumn.com.marketplace_backend.domain.input;
 
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserRecordDto;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-public interface UserService {
+public interface UserServicePort {
     PaginationResponseDto<List<UserRecordDto>> getUsers(
             int page,
             int pageSize,

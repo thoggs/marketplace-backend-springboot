@@ -3,8 +3,8 @@ package codesumn.com.marketplace_backend.domain.seeders;
 import codesumn.com.marketplace_backend.domain.models.ProductModel;
 import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.application.config.EnvironConfig;
-import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.ProductRepository;
-import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.UserRepository;
+import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.product.ProductJpaRepository;
+import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.repository.user.UserJpaRepository;
 import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import net.datafaker.Faker;
 import net.datafaker.providers.base.Text;
@@ -29,20 +29,20 @@ public class DatabaseSeeder {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseSeeder.class);
     private final JdbcTemplate jdbcTemplate;
-    private final UserRepository userRepository;
-    private final ProductRepository productRepository;
+    private final UserJpaRepository userJpaRepository;
+    private final ProductJpaRepository productJpaRepository;
     private final Faker faker;
     private final Boolean enableSeeder;
 
     @Autowired
     public DatabaseSeeder(
             JdbcTemplate jdbcTemplate,
-            UserRepository userRepository,
-            ProductRepository productRepository
+            UserJpaRepository userJpaRepository,
+            ProductJpaRepository productJpaRepository
     ) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userRepository = userRepository;
-        this.productRepository = productRepository;
+        this.userJpaRepository = userJpaRepository;
+        this.productJpaRepository = productJpaRepository;
         this.faker = new Faker();
         this.enableSeeder = Boolean.valueOf(EnvironConfig.SEED_DB);
     }
@@ -75,7 +75,7 @@ public class DatabaseSeeder {
                         )
                 ));
                 user.setRole(RolesEnum.fromValue(faker.options().option("USER", "ADMIN")));
-                userRepository.save(user);
+                userJpaRepository.save(user);
             }
             logger.info("100 Users Seeded");
         } else {
@@ -99,7 +99,7 @@ public class DatabaseSeeder {
                         .randomDouble(2, 10, 1000)));
                 product.setStock(faker.number().numberBetween(1, 100));
                 product.setCategory(faker.commerce().department());
-                productRepository.save(product);
+                productJpaRepository.save(product);
             }
             logger.info("100 Products Seeded");
         } else {
