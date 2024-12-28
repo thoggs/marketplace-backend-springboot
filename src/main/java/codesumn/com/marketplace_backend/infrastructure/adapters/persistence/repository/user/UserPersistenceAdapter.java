@@ -2,6 +2,7 @@ package codesumn.com.marketplace_backend.infrastructure.adapters.persistence.rep
 
 import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.domain.output.UserPersistencePort;
+import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.specifications.UserSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,13 +21,13 @@ public class UserPersistenceAdapter implements UserPersistencePort {
     }
 
     @Override
-    public Page<UserModel> findAllWithSpecAndPageable(Specification<UserModel> specification, Pageable pageable) {
-        return userJpaRepository.findAll(specification, pageable);
-    }
+    public Page<UserModel> findAll(String searchTerm, Pageable pageable) {
 
-    @Override
-    public Page<UserModel> findAllWithPageable(Pageable pageable) {
-        return userJpaRepository.findAll(pageable);
+        Specification<UserModel> spec = (searchTerm != null && !searchTerm.isEmpty())
+                ? UserSpecifications.searchWithTerm(searchTerm)
+                : null;
+
+        return userJpaRepository.findAll(spec, pageable);
     }
 
     @Override
