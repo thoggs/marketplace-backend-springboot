@@ -6,12 +6,12 @@ import org.springframework.data.jpa.domain.Specification;
 public class ProductSpecifications {
 
     public static Specification<ProductModel> searchWithTerm(String searchTerm) {
-        return (root, query, criteriaBuilder) -> {
+        return (root, query, cb) -> {
             String likePattern = "%" + searchTerm.toLowerCase() + "%";
-            return criteriaBuilder.or(
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), likePattern),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), likePattern),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("category")), likePattern)
+            return cb.or(
+                    cb.like(cb.lower(root.get("name")), likePattern),
+                    cb.like(cb.lower(root.get("description")), likePattern),
+                    cb.like(cb.lower(root.get("category")), likePattern)
             );
         };
     }

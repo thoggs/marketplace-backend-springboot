@@ -1,4 +1,4 @@
-package codesumn.com.marketplace_backend.application.services;
+package codesumn.com.marketplace_backend.application.adapters.input;
 
 import codesumn.com.marketplace_backend.application.dtos.auth.AuthCredentialsRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.auth.AuthResponseDto;
@@ -10,7 +10,7 @@ import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.application.mappers.UserMapper;
 import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.domain.output.UserPersistencePort;
-import codesumn.com.marketplace_backend.domain.usecases.UserRegistrationService;
+import codesumn.com.marketplace_backend.domain.input.UserRegistrationPort;
 import codesumn.com.marketplace_backend.services.jwt.JwtService;
 import codesumn.com.marketplace_backend.services.web.GitHubService;
 import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
@@ -25,7 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthServiceImpl implements UserRegistrationService {
+public class AuthPortAdapter implements UserRegistrationPort {
 
     private final UserPersistencePort userPersistencePort;
     private final PasswordEncoder passwordEncoder;
@@ -33,7 +33,7 @@ public class AuthServiceImpl implements UserRegistrationService {
     private final AuthenticationManager authenticationManager;
     private final GitHubService gitHubService;
 
-    public AuthServiceImpl(
+    public AuthPortAdapter(
             UserPersistencePort userPersistencePort,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,

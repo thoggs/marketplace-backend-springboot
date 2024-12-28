@@ -5,7 +5,7 @@ import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordD
 import codesumn.com.marketplace_backend.application.dtos.record.UserRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.response.PaginationResponseDto;
 import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
-import codesumn.com.marketplace_backend.domain.usecases.UserService;
+import codesumn.com.marketplace_backend.domain.input.UserServicePort;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +21,18 @@ import java.util.UUID;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserServicePort userServicePort;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserServicePort userServicePort) {
+        this.userServicePort = userServicePort;
     }
 
     @GetMapping
     public ResponseEntity<PaginationResponseDto<List<UserRecordDto>>> index(
             @Valid @ParameterObject @ModelAttribute FilterCriteriaParamDTO parameters
     ) throws IOException {
-        return new ResponseEntity<>(userService.getUsers(
+        return new ResponseEntity<>(userServicePort.getUsers(
                 parameters.getPage(),
                 parameters.getPageSize(),
                 parameters.getSearchTerm(),
@@ -42,14 +42,14 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto<UserRecordDto>> show(@PathVariable UUID id) {
-        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+        return new ResponseEntity<>(userServicePort.getUserById(id), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<ResponseDto<UserRecordDto>> store(
             @RequestBody @Valid UserInputRecordDto userInputRecordDto
     ) {
-        return new ResponseEntity<>(userService.createUser(userInputRecordDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(userServicePort.createUser(userInputRecordDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -57,11 +57,11 @@ public class UserController {
             @PathVariable UUID id,
             @RequestBody @Valid UserInputRecordDto userInputRecordDto
     ) {
-        return new ResponseEntity<>(userService.updateUser(id, userInputRecordDto), HttpStatus.OK);
+        return new ResponseEntity<>(userServicePort.updateUser(id, userInputRecordDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<UserRecordDto>> destroy(@PathVariable UUID id) {
-        return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
+        return new ResponseEntity<>(userServicePort.deleteUser(id), HttpStatus.OK);
     }
 }

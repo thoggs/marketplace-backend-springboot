@@ -1,4 +1,4 @@
-package codesumn.com.marketplace_backend.domain.usecases;
+package codesumn.com.marketplace_backend.domain.input;
 
 import codesumn.com.marketplace_backend.application.dtos.auth.AuthCredentialsRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.auth.AuthResponseDto;
@@ -6,7 +6,7 @@ import codesumn.com.marketplace_backend.application.dtos.record.GitHubTokenReque
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
 
-public interface UserRegistrationService {
+public interface UserRegistrationPort {
     ResponseDto<AuthResponseDto> authenticateUser(AuthCredentialsRecordDto credentials);
 
     ResponseDto<AuthResponseDto> authenticateGitHubUser(GitHubTokenRequestRecordDto tokenRequest);

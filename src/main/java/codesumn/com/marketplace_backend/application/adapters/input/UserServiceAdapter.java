@@ -1,5 +1,6 @@
-package codesumn.com.marketplace_backend.application.services;
+package codesumn.com.marketplace_backend.application.adapters.input;
 
+import codesumn.com.marketplace_backend.application.services.UserCreationService;
 import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.specifications.UserSpecifications;
 import codesumn.com.marketplace_backend.application.dtos.record.MetadataPaginationRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
@@ -9,7 +10,7 @@ import codesumn.com.marketplace_backend.application.dtos.response.PaginationResp
 import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.domain.models.UserModel;
 import codesumn.com.marketplace_backend.domain.output.UserPersistencePort;
-import codesumn.com.marketplace_backend.domain.usecases.UserService;
+import codesumn.com.marketplace_backend.domain.input.UserServicePort;
 import codesumn.com.marketplace_backend.shared.enums.RolesEnum;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.EmailAlreadyExistsException;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.ResourceNotFoundException;
@@ -32,7 +33,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceAdapter implements UserServicePort {
     private final UserPersistencePort userPersistencePort;
     private final PasswordEncoder passwordEncoder;
     private final SortParser sortParser;
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    public UserServiceImpl(
+    public UserServiceAdapter(
             UserPersistencePort userPersistencePort,
             PasswordEncoder passwordEncoder,
             SortParser sortParser,
