@@ -1,7 +1,6 @@
 package codesumn.com.marketplace_backend.application.adapters.input;
 
 import codesumn.com.marketplace_backend.application.services.UserCreationService;
-import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.specifications.UserSpecifications;
 import codesumn.com.marketplace_backend.application.dtos.record.MetadataPaginationRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserInputRecordDto;
 import codesumn.com.marketplace_backend.application.dtos.record.UserRecordDto;
@@ -20,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -70,13 +68,7 @@ public class UserServiceAdapter implements UserServicePort {
 
         Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
 
-        Specification<UserModel> spec = (searchTerm != null && !searchTerm.isEmpty())
-                ? UserSpecifications.searchWithTerm(searchTerm)
-                : null;
-
-        Page<UserModel> userPage = (spec != null)
-                ? userPersistencePort.findAllWithSpecAndPageable(spec, pageable)
-                : userPersistencePort.findAllWithPageable(pageable);
+        Page<UserModel> userPage = userPersistencePort.findAll(searchTerm, pageable);
 
         List<UserRecordDto> userRecords = userPage.getContent().stream()
                 .map(user -> new UserRecordDto(

@@ -9,7 +9,6 @@ import codesumn.com.marketplace_backend.application.dtos.response.ResponseDto;
 import codesumn.com.marketplace_backend.domain.input.ProductServicePort;
 import codesumn.com.marketplace_backend.domain.models.ProductModel;
 import codesumn.com.marketplace_backend.domain.output.ProductPersistencePort;
-import codesumn.com.marketplace_backend.infrastructure.adapters.persistence.specifications.ProductSpecifications;
 import codesumn.com.marketplace_backend.shared.exceptions.errors.ResourceNotFoundException;
 import codesumn.com.marketplace_backend.shared.parsers.SortParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -56,13 +54,7 @@ public class ProductServiceAdapter implements ProductServicePort {
 
         Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
 
-        Specification<ProductModel> spec = (searchTerm != null && !searchTerm.trim().isEmpty())
-                ? ProductSpecifications.searchWithTerm(searchTerm)
-                : null;
-
-        Page<ProductModel> productPage = (spec != null)
-                ? productPersistencePort.findAllWithSpecAndPageable(spec, pageable)
-                : productPersistencePort.findAllWithPageable(pageable);
+        Page<ProductModel> productPage = productPersistencePort.findAll(searchTerm, pageable);
 
         List<ProductRecordDto> productRecords = productPage.getContent().stream()
                 .map(product -> new ProductRecordDto(
