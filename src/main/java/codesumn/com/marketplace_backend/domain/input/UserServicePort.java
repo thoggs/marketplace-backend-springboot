@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserServicePort {
-    PaginationResponseDto<List<UserRecordDto>> getUsers(
+    PaginationResponseDto<List<UserRecordDto>> getAll(
             int page,
             int pageSize,
             String searchTerm,

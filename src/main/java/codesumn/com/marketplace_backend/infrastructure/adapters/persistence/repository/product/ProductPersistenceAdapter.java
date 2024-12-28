@@ -12,28 +12,35 @@ import java.util.UUID;
 
 @Repository
 public class ProductPersistenceAdapter implements ProductPersistencePort {
+
+    private final ProductJpaRepository productJpaRepository;
+
+    public ProductPersistenceAdapter(ProductJpaRepository productJpaRepository) {
+        this.productJpaRepository = productJpaRepository;
+    }
+
     @Override
     public Page<ProductModel> findAllWithSpecAndPageable(Specification<ProductModel> specification, Pageable pageable) {
-        return null;
+        return productJpaRepository.findAll(specification, pageable);
     }
 
     @Override
     public Page<ProductModel> findAllWithPageable(Pageable pageable) {
-        return null;
+        return productJpaRepository.findAll(pageable);
     }
 
     @Override
     public Optional<ProductModel> findById(UUID id) {
-        return Optional.empty();
+        return productJpaRepository.findById(id);
     }
 
     @Override
     public void save(ProductModel productModel) {
-
+        productJpaRepository.save(productModel);
     }
 
     @Override
     public void delete(ProductModel productModel) {
-
+        productJpaRepository.delete(productModel);
     }
 }

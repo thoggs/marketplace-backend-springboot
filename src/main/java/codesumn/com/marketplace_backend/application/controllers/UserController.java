@@ -32,7 +32,7 @@ public class UserController {
     public ResponseEntity<PaginationResponseDto<List<UserRecordDto>>> index(
             @Valid @ParameterObject @ModelAttribute FilterCriteriaParamDTO parameters
     ) throws IOException {
-        return new ResponseEntity<>(userServicePort.getUsers(
+        return new ResponseEntity<>(userServicePort.getAll(
                 parameters.getPage(),
                 parameters.getPageSize(),
                 parameters.getSearchTerm(),
